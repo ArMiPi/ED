@@ -5,6 +5,7 @@
 #include"strings.h"
 #include"database.h"
 #include"llist.h"
+#include"svg.h"
 
 int main(int argc, char *argv[]) {
     // Leitura dos parâmetros de entrada do programa
@@ -13,13 +14,10 @@ int main(int argc, char *argv[]) {
     // Ler e armazenar informações do .geo
     database db = readData(getBED(prms), getGEO(prms));
 
-    llist lst = getDBdata(db);
-    item li = GetFirstItem(lst);
-    while(li != NULL) {
-        printf("%s\n", (string)GetItemElement(li));
-        li = GetNextItem(li);
-    }
+    llist data = getDBdata(db);
+
     // Criar .svg a partir do .geo
+    generateSVG(getBSD(prms), getDBname(db), data);
 
     destroyDB(db);
     destroyParams(prms);    
