@@ -8,7 +8,7 @@
 
 typedef struct _database {
     string name;
-    queue data;
+    llist data;
 }DATABASE;
 
 /*
@@ -34,20 +34,20 @@ FILE *openFile(string fullpath) {
     return fptr;
 }
 
-queue readFile(FILE *fptr) {
-    queue q = newQueue();
+llist readFile(FILE *fptr) {
+    llist lst = NewList();
 
     string line = newEmptyString(MAX_SIZE);
     string data;
     while (fgets(line, MAX_SIZE, fptr)) {
         data = copyString(line);
         if(data[strlen(data) - 1] == '\n') data[strlen(data) - 1] = '\0';
-        enqueue(q, data);
+        InsertEnd(lst, data);
     }
     
     free(line);
 
-    return q;
+    return lst;
 }
 
 /*
@@ -105,7 +105,7 @@ string getDBname(database db) {
     return DB->name;
 }
 
-queue getDBdata(database db) {
+llist getDBdata(database db) {
     if(db == NULL) return NULL;
 
     DATABASE *DB = (DATABASE *) db;
@@ -119,7 +119,7 @@ void destroyDB(database db) {
     DATABASE *DB = (DATABASE *) db;
 
     if(DB->name) free(DB->name);
-    if(DB->data != NULL) destroyQueue(DB->data, &free);
+    if(DB->data != NULL) DestroyList(DB->data, &free);
     free(DB);
 
     DB = NULL;

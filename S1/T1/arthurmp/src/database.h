@@ -2,7 +2,7 @@
 #define DATABASE_H
 
 #include"strings.h"
-#include"queue.h"
+#include"llist.h"
 
 /*
     - Esse módulo tem por objetivo definir funções para ler e armazenar
@@ -50,13 +50,13 @@ string getDBname(database db);
         - db: Struct
     
     # Saída:
-        - queue: Fila
+        - llist: Lista
     
     # Descrição:
-        - Retorna uma fila contendo os comandos armazenados
+        - Retorna uma lista contendo os comandos armazenados
           em db
 */
-queue getDBdata(database db);
+llist getDBdata(database db);
 
 /*
     # Entrada:
