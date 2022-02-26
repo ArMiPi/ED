@@ -23,8 +23,8 @@ typedef void* database;
         - database: Struct
     
     # Descrição:
-        - Abre o arquivo em path/name e armazena os comandos
-          contidos nesse arquivo
+        - Abre o arquivo em path/name, armazena os comandos
+          contidos nesse arquivo e fecha o arquivo
         
         - path != NULL && name != NULL
 

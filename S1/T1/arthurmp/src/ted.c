@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 
 #include"params.h"
 #include"strings.h"
@@ -12,5 +13,16 @@ int main(int argc, char *argv[]) {
     // Ler e armazenar informações do .geo
     database db = readData(getBED(prms), getGEO(prms));
 
-    printf("%s", getDBname(db));
+    printf("%s\n", getDBname(db));
+
+    queue q = getDBdata(db);
+    string s;
+    while (!isQueueEmpty(q)) {
+        s = (string)dequeue(q);
+        printf("%s\n", s);
+        free(s);
+    }
+
+    destroyDB(db);
+    destroyParams(prms);    
 }

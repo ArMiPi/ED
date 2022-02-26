@@ -1,7 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 
 #include"database.h"
+
+#define MAX_SIZE 200
 
 typedef struct _database {
     string name;
@@ -29,6 +32,22 @@ FILE *openFile(string fullpath) {
     }
 
     return fptr;
+}
+
+queue readFile(FILE *fptr) {
+    queue q = newQueue();
+
+    string line = newEmptyString(MAX_SIZE);
+    string data;
+    while (fgets(line, MAX_SIZE, fptr)) {
+        data = copyString(line);
+        if(data[strlen(data) - 1] == '\n') data[strlen(data) - 1] = '\0';
+        enqueue(q, data);
+    }
+    
+    free(line);
+
+    return q;
 }
 
 /*
@@ -62,11 +81,18 @@ database readData(string path, string name) {
         free(barPath);
     }
 
+    // Abrir arquivo para leitura
     FILE *fptr = openFile(fullpath);
 
     // Criar DATABASE
     DATABASE *db = newDatabase();
-    db->name = fullpath;
+    db->name = slice(name, 0, strlen(name) - 5);
+    db->data = readFile(fptr);
+
+    // Fechar arquivo
+    fclose(fptr);
+
+    free(fullpath);
 
     return db;
 }
@@ -77,4 +103,25 @@ string getDBname(database db) {
     DATABASE *DB = (DATABASE *) db;
 
     return DB->name;
+}
+
+queue getDBdata(database db) {
+    if(db == NULL) return NULL;
+
+    DATABASE *DB = (DATABASE *) db;
+
+    return DB->data;
+}
+
+void destroyDB(database db) {
+    if(db == NULL) return;
+
+    DATABASE *DB = (DATABASE *) db;
+
+    if(DB->name) free(DB->name);
+    if(DB->data != NULL) destroyQueue(DB->data, &free);
+    free(DB);
+
+    DB = NULL;
+    db = NULL;
 }
