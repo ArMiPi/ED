@@ -81,7 +81,7 @@ string getRectangleBorderColor(rectangle rect) {
 
     RECTANGLE *r = (RECTANGLE *) rect;
 
-    return r->corp;
+    return r->corb;
 }
 
 void destroyRectangle(rectangle rect) {
