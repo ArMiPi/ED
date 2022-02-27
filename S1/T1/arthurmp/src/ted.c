@@ -12,13 +12,18 @@ int main(int argc, char *argv[]) {
     params prms = newParams(argc, argv);
 
     // Ler e armazenar informações do .geo
-    database db = readData(getBED(prms), getGEO(prms));
-
-    llist data = getDBdata(db);
+    database geo = readData(getBED(prms), getGEO(prms));
 
     // Criar .svg a partir do .geo
-    generateSVG(getBSD(prms), getDBname(db), data);
+    generateSVG(getBSD(prms), getDBname(geo), getDBdata(geo));
 
-    destroyDB(db);
+    if(getQRY(prms) != NULL) {
+        // Ler e armazenar informações do .qry
+        database qry = readData(getBED(prms), getQRY(prms));
+
+        // Executar comandos do .qry
+    }
+
+    destroyDB(geo);
     destroyParams(prms);    
 }
