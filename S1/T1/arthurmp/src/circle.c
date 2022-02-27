@@ -85,5 +85,5 @@ void destroyCircle(circle circ) {
 
     free(c);
     c = NULL;
-    circ = NULL
+    circ = NULL;
 }
