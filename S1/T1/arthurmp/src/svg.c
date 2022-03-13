@@ -155,8 +155,8 @@ void drawText(FILE *fptr, Splited splt) {
     string corp = getSubstring(splt, 5);
     string a = getSubstring(splt, 6);
     string *content = getAllSubStrings(splt);
-    content += 6;
-    string txto = join((getNumSubStrings(splt) - 6), content, " ");
+    content += 7;
+    string txto = join((getNumSubStrings(splt) - 7), content, " ");
 
     string anchor;
     if(strcmp(a, "i") == 0) anchor = "start";

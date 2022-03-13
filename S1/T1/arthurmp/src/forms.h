@@ -59,7 +59,7 @@ string getFormAnchor(string command);
 
 /*
     # Entrada:
-        - command: Instrução do ,geo
+        - command: Instrução do .geo
     
     # Saída:
         - string
@@ -71,5 +71,17 @@ string getFormAnchor(string command);
           string na ordem em que aparecem em command
 */
 string getFormColor(string command);
+
+/*
+    # Entrada:
+        - command: Instrução do .geo
+    
+    # Saída:
+        string
+    
+    # Descrição:
+        - Retorna uma string contendo todas as informações da forma em command
+*/
+string reportForm(string command);
 
 #endif

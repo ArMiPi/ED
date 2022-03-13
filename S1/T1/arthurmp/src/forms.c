@@ -4,6 +4,9 @@
 
 #include"forms.h"
 #include"split.h"
+#include"point.h"
+
+#define MAX_SIZE 300
 
 string getFormType(string command) {
     if(command == NULL) return NULL;
@@ -105,4 +108,75 @@ string getFormColor(string command) {
     free(type);
 
     return colors;
+}
+
+string reportForm(string command) {
+    if(command == NULL) return NULL;
+
+    Splited splt = split(command, " ");
+
+    string type = getFormType(command);
+    string temp = newEmptyString(MAX_SIZE);
+    string report;
+
+    if(strcmp(type, "circulo") == 0) {
+        string x = getSubstring(splt, 2);
+        string y = getSubstring(splt, 3);
+        string raio = getSubstring(splt, 4);
+        string preenchimento = getSubstring(splt, 5);
+        string borda = getSubstring(splt, 6);
+
+        sprintf(temp, "%s\nâncora em {%s, %s}\nraio: %s\npreenchimento: %s\nborda: %s\n\n", type, x, y, raio, preenchimento, borda);
+    }
+    else if(strcmp(type, "retangulo") == 0) {
+        string x = getSubstring(splt, 2);
+        string y = getSubstring(splt, 3);
+        string width = getSubstring(splt, 4);
+        string height = getSubstring(splt, 5);
+        string preenchimento = getSubstring(splt, 6);
+        string borda = getSubstring(splt, 7);
+
+        sprintf(temp, "%s\nâncora em {%s, %s}\nlargura: %s\naltura: %s\npreenchimento: %s\nborda: %s\n\n", type, x, y, width, height, preenchimento, borda);
+    }
+    else if(strcmp(type, "reta")) {
+        point P1 = newPoint(strtod(getSubstring(splt, 2), NULL), strtod(getSubstring(splt, 3), NULL));
+        point P2 = newPoint(strtod(getSubstring(splt, 4), NULL), strtod(getSubstring(splt, 5), NULL));
+        string x, y;
+
+        if(comparePoints(P1, P2) > 0) {
+            x = getSubstring(splt, 2);
+            y = getSubstring(splt, 3);
+        }
+        else {
+            x = getSubstring(splt, 4);
+            y = getSubstring(splt, 5);
+        }
+
+        free(P1);
+        free(P2);
+
+        string cor = getSubstring(splt, 6);
+
+        sprintf(temp, "%s\nâncora em {%s, %s}\ncor: %s\n\n", type, x, y, cor);
+    }
+    else if(strcmp(type, "texto") == 0) {
+        string x = getSubstring(splt, 2);
+        string y = getSubstring(splt, 3);
+        string borda = getSubstring(splt, 4);
+        string preenchimento = getSubstring(splt, 5);
+        string anchorPos = getSubstring(splt, 6);
+        string *content = getAllSubStrings(splt);
+        content += 7;
+        string txto = join((getNumSubStrings(splt) - 7), content, " ");
+
+        sprintf(temp, "%s\nâncora em {%s, %s}\nborda: %s\npreenchimento: %s\na: %s\ntexto: %s\n\n", type, x, y, borda, preenchimento, anchorPos, txto);
+        
+        free(txto);
+    }
+
+    report = copyString(temp);
+    free(temp);
+    destroySplited(splt);
+
+    return report;
 }
