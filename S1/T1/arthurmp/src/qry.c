@@ -26,7 +26,58 @@
 
         - TXT: Reportar a coordenada inserida e os dados da figura
 */
-void inp(string i, queue polygon, llist db, FILE *txt);
+void inp(string i, queue polygon, llist db, FILE *txt) {
+    if(i == NULL) {
+        printf("WARNING: Missing a parameter for inp\n");
+        return NULL;
+    }
+
+    Splited splt;
+    point p;
+    double x, y;
+    // Percorrer db em busca do forma com id i
+    for(item li = GetFirstItem(db); li != NULL; li = GetNextItem(li)) {
+        splt = split(GetItemElement(li), " ");
+
+        if(strcmp(getSubstring(splt, 1), i) != 0) {
+            destroySplited(splt);
+            continue;
+        }
+
+        // Armazenar o valor da coordenada âncora da forma encontrada
+        string points = getFormAnchor(GetItemElement(li));
+        Splited spltP = split(points, " ");
+
+        x = strtod(getSubstring(spltP, 0), NULL);
+        y = strtod(getSubstring(spltP, 1), NULL);
+
+        p = newPoint(x, y);
+
+        // Caso a forma seja uma reta
+        if(getNumSubstrings(spltP) > 2) {
+            double x2, y2;
+
+            x2 = strtod(getSubstring(spltP, 2), NULL);
+            y2 = strtod(getSubstring(spltP, 3), NULL);
+
+            point P2 = newPoint(x2, y2);
+
+            if(comparePoints(p, P2) > 0) free(P2);
+            else {
+                free(p);
+                p = P2;
+            }
+        }
+
+        // Armazenar a coordenada encontrada em polygon
+        enqueue(polygon, p);
+
+        free(points);
+        destroySplited(splt);
+        destroySplited(spltP);
+        return;
+    }
+}
 
 /*
     # Entradas:
