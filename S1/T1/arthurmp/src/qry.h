@@ -3,9 +3,7 @@
 
 #include<stdio.h>
 
-#include"queue.h"
 #include"llist.h"
-#include"strings.h"
 
 /*
     - Esse módulo tem por objetivo implementar os comandos do .qry
