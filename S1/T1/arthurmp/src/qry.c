@@ -2,6 +2,10 @@
 
 #include"qry.h"
 #include"split.h"
+#include"queue.h"
+#include"strings.h"
+#include"point.h"
+#include"forms.h"
 
 // selected deve ser uma lista onde cada elemento é um ponteiro para um elemento de db
 
@@ -135,13 +139,32 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
 void ups(string corb, string corp, string dx, string dy, llist selected);
 
 void executeQry(llist commands, llist database) {
+    // txt de saída utilizado por algumas qrys
     FILE *txt = NULL;
+
+    // Lista de formas selecionadas pelo comando sel
     llist selected = NULL;
+
+    // Fila de pontos para a criação de um polígono (Pontos adicionados pela função inp)
+    queue polygon = NULL;
 
     Splited splt;
     for(item i = GetFirstItem(commands); i != NULL; i = GetNextItem(i)) {
         splt = split((char *)GetItemElement(i), " ");
 
-        //if(strcmp(getSubstring(splt, 0)) == 0) inp(getSubstring(splt, 1), polygon, db, txt);
+        if(strcmp(getSubstring(splt, 0), "inp") == 0) inp(getSubstring(splt, 1), polygon, database, txt);
+        else if(strcmp(getSubstring(splt, 0), "rmp") == 0) rmp(polygon, database);
+        else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
+        else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);
+        else if(strcmp(getSubstring(splt, 0), "sel") == 0) sel(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected, txt);
+        else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(selected, txt);
+        else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
+        else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
+        else printf("WARNING: %s is not a valid comand\n", getSubstring(splt, 0));
+
+        destroySplited(splt);
     }
+
+    // Criar o svg resultante das qrys
+    
 }
