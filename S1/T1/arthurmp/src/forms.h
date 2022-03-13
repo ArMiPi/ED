@@ -5,77 +5,71 @@
 #include"strings.h"
 
 /*
-    - Esse módulo tem por objetivo melhor organizar as formas que são obtidas pelo .geo
+    - Esse módulo tem por objetivo facilitar a obtenção de informações das formas contidas no .geo
 
-    - Formas:
-        -> c: Círculo
-        -> r: Retângulo
-        -> l: Reta
-        -> t: Texto
+    - É necessário desalocar a memória utilizada pelo retono de todas as funções desse módulo
+
+    - Todas as funções assumem command != NULL
 */
-
-typedef void *form;
 
 /*
     # Entrada:
-        - instruction: Comando do .geo para criar a forma
-    
-    # Saída:
-        - form: Struct
-    
-    # Descrição:
-        - Reorna uma nova forma
-
-        - instruction != NULL
-*/
-form newForm(string instruction);
-
-/*
-    # Entrada:
-        - instructions: Comandos do .geo para criar as formas
-    
-    # Saída:
-        - llist: Lista com as formas
-    
-    # Descrição:
-        - Retorna uma lista contendo todas as formas indicadas em
-          instructions
-*/
-llist formsList(llist instructions);
-
-/*
-    # Entrada: 
-        - format: Forma
+        command: Instrução do .geo
     
     # Saída:
         - string
     
     # Descrição:
-        - Retorna o tipo da forma
-          (círculo, retângulo, linha ou texto)
+        - Retorna uma string contendo o tipo da forma em command
+
+        - c -> circulo
+        - r -> retangulo
+        - l -> reta
+        - t -> texto
 */
-string getFormType(form format);
+string getFormType(string command);
 
 /*
     # Entrada:
-        - format: Forma
+        - command: Instrução do .geo
     
     # Saída:
-        - void*: Pointeiro
+        - string
     
     # Descrição:
-        - Retorna um ponteiro para o endereço contendo
-          as informações da forma em format
+        - Retorna uma string contendo o ID da forma indicada por command
 */
-void *getFormInfo(form format);
+string getFormID(string command);
 
 /*
     # Entrada:
-        - format: Forma
+        - command: Instrução do .geo
+    
+    # Saída
+        - string
     
     # Descrição:
-        - Libera a memória utilizada por format
+        - Retorna uma string contendo o ponto âncora da forma em command
+
+        - Caso a forma seja uma linha, será retornada uma string contendo
+          os dois pontos indicados em command, indicados por (x1, y1) e
+          (x2, y2), respectivamente
 */
-void destroyForm(form format);
+string getFormAnchor(string command);
+
+/*
+    # Entrada:
+        - command: Instrução do ,geo
+    
+    # Saída:
+        - string
+    
+    # Descrição:
+        - Retorna uma string contendo a(s) cor(es) da forma em command
+
+        - Caso estejam indicadas mais de uma cor, elas serão retornadas em
+          string na ordem em que aparecem em command
+*/
+string getFormColor(string command);
 
 #endif
