@@ -60,4 +60,27 @@ double getPointY(point p);
 */
 void updatePoint(point p, double x, double y);
 
+/*
+    # Entadas:
+        - p1, p2: Pontos
+    
+    # Saídas:
+        - -1
+        - 0
+        - 1
+    
+    # Descrição:
+        - Retorna 0 caso os pontos sejam iguais
+
+        - Retorna 1 caso p1 > p2
+
+        - Retorna -1 caso p1 < p2
+
+        - p1 será considerado maior que p2 se a coordenada x de
+          p1 for maior que a coordenada x de p2.
+          Caso ambos tenham a mesma coordenada x, a comparação será
+          realizada com base na coordenada y
+*/
+int comparePoints(point p1, point p2);
+
 #endif
