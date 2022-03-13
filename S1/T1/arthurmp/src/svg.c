@@ -154,7 +154,9 @@ void drawText(FILE *fptr, Splited splt) {
     string corb = getSubstring(splt, 4);
     string corp = getSubstring(splt, 5);
     string a = getSubstring(splt, 6);
-    string txto = getSubstring(splt, 7);
+    string *content = getAllSubStrings(splt);
+    content += 6;
+    string txto = join((getNumSubStrings(splt) - 6), content, " ");
 
     string anchor;
     if(strcmp(a, "i") == 0) anchor = "start";
@@ -169,6 +171,8 @@ void drawText(FILE *fptr, Splited splt) {
     fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, corb);
     fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y, x);
     fprintf(fptr, "%s </text>\n", id);
+
+    free(txto);
 }
 
 void generateSVG(string path, string name, llist data) {
