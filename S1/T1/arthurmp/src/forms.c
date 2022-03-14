@@ -47,26 +47,37 @@ string getFormAnchor(string command) {
 
     string type = getFormType(command);
 
-    string *pontos;
+    string *pontos = (string) malloc(2 * sizeof(string));
     string anchor;
     if(strcmp(type, "reta") == 0) {
-        pontos = (string *) malloc(4 * sizeof(string));
+        double x1, y1, x2, y2;
 
-        pontos[0] = getSubstring(splt, 2);
-        pontos[1] = getSubstring(splt, 3);
-        pontos[2] = getSubstring(splt, 4);
-        pontos[3] = getSubstring(splt, 5);
+        x1 = strtod(getSubstring(splt, 2), NULL);
+        y1 = strtod(getSubstring(splt, 3), NULL);
+        x2 = strtod(getSubstring(splt, 4), NULL);
+        y2 = strtod(getSubstring(splt, 5), NULL);
 
-        anchor = join(4, pontos, " ");
+        point P1 = newPoint(x1, y1);
+        point P2 = newPoint(x2, y2);
+
+        if(comparePoints(P1, P2) > 0) {
+            pontos[0] = getSubstring(splt, 2);
+            pontos[1] = getSubstring(splt, 3);
+        }
+        else {
+            pontos[0] = getSubstring(splt, 4);
+            pontos[1] = getSubstring(splt, 5);
+        }
+
+        free(P1);
+        free(P2);
     }
     else {
-        pontos = (string *) malloc(2 * sizeof(string));
-
         pontos[0] = getSubstring(splt, 2);
         pontos[1] = getSubstring(splt, 3);
-
-        anchor = join(2, pontos, " ");
     }
+
+    anchor = join(2, pontos, " ");
 
     free(type);
     free(pontos);
