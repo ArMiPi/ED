@@ -22,6 +22,9 @@ int main(int argc, char *argv[]) {
         database qry = readData(getBED(prms), getQRY(prms));
 
         // Executar comandos do .qry
+
+
+        destroyDB(qry);
     }
 
     destroyDB(geo);

@@ -59,7 +59,7 @@ void reportTXT(FILE *txt, string command, string toReport) {
     if(toReport == NULL) toReport = "Nada a reportar\n\n";
 
     fprintf(txt, "[*] %s\n", command);
-    fprintf(txt, "%s", toReport);
+    fprintf(txt, "%s\n\n", toReport);
 }
 
 /*
@@ -71,7 +71,7 @@ void reportTXT(FILE *txt, string command, string toReport) {
         - txt: Ponteiro para um arquivo .txt
     
     # Saída:
-        - string
+        - string: String contendo todas as informações da forma
 
     # Descrição:
         - Insere em polygon a coordenada âncora da forma com
@@ -84,6 +84,7 @@ void reportTXT(FILE *txt, string command, string toReport) {
         - Retorna a string a ser inserida no .txt
 */
 string inp(string i, queue polygon, llist db) {
+    if(polygon == NULL || db == NULL) return NULL;
     if(i == NULL) {
         printf("WARNING: Missing a parameter for inp\n");
         return NULL;
@@ -119,14 +120,22 @@ string inp(string i, queue polygon, llist db) {
 /*
     # Entradas:
         - polygon: Fila contendo as coordenadas do polígono atual
-        - db: Lista contendo as formas do .geo
     
+    # Saída:
+        - string: String contendo a coordenada removida
+
     # Descrição:
         - Remove a coordenada mais antiga inserida em polygon
 
-        - TXT: Reportar a coordenada removida
+        - Retorna a string a ser inserida no .txt
 */
-void rmp(queue polygon, llist db);
+string rmp(queue polygon) {
+    if(polygon == NULL) return NULL;
+
+    string toReport = dequeue(polygon);
+
+    return toReport;
+}
 
 /*
     # Entradas:
@@ -264,7 +273,10 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
             toReport = inp(getSubstring(splt, 1), polygon, database);
             reportTXT(txt, GetItemElement(i), toReport);
         }
-        else if(strcmp(getSubstring(splt, 0), "rmp") == 0) rmp(polygon, database);
+        else if(strcmp(getSubstring(splt, 0), "rmp") == 0) {
+            toReport = rmp(polygon);
+            reportTXT(txt, GetItemElement(i), toReport);
+        }
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
         else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);
         else if(strcmp(getSubstring(splt, 0), "sel") == 0) sel(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected, txt);
