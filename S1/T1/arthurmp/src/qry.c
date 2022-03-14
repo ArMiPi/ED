@@ -166,7 +166,11 @@ void pol(string i, string d, string e, string corb, string corp, queue polygon, 
     # Descrição:
         - Remove todas as coordenadas do polígono corrente
 */
-void clp(queue polygon);
+void clp(queue polygon) {
+    if(polygon == NULL) return;
+
+    while(!isQueueEmpty(polygon)) free(dequeue(polygon));
+}
 
 /*
     # Entradas:
