@@ -3,7 +3,6 @@
 #include"qry.h"
 #include"split.h"
 #include"queue.h"
-#include"strings.h"
 #include"point.h"
 #include"forms.h"
 
@@ -11,11 +10,69 @@
 
 /*
     # Entradas:
+        - path: Path para a criação do arquivo
+        - name: Nome do arquivo (sem extensão)
+    
+    # Saída:
+        - FILE*: Ponteiro para arquivo
+    
+    # Descrição:
+        - Abre um arquivo name.txt em path para
+          escrita
+*/
+FILE *createTXT(string path, string name) {
+    if(path == NULL || name == NULL) return NULL;
+
+    // Gerar caminho completo para criação do arquivo
+    string fullname = concat(name, ".txt");
+    string fullpath;
+    if(endsWith(path, "/")) fullpath = concat(path, fullname);
+    else {
+        string barPath = concat(path, "/");
+        fullpath = concat(barPath, fullname);
+        free(barPath);
+    }
+    free(fullname);
+
+    FILE *fptr = fopen(fullpath, "w");
+    if(fptr == NULL) printf("WARNING: Could not create %s\n", fullpath);
+
+    free(fullpath);
+
+    return fptr;
+}
+
+/*
+    # Entradas:
+        - txt: Ponteiro para um arquivo .txt
+        - command: String contendo um comando do .qry
+        - toReport: String contendo o conteúdo a ser escrito no .txt
+    
+    # Descrição:
+        - Escreve os conteúdos de command e toReport em txt
+        - txt != NULL
+*/
+void reportTXT(FILE *txt, string command, string toReport) {
+    if(txt == NULL) return;
+
+    if(command == NULL) command = "NULL";
+    if(toReport == NULL) toReport = "Nada a reportar\n\n";
+
+    fprintf(txt, "[*] %s\n", command);
+    fprintf(txt, "%s", toReport);
+}
+
+/*
+    # Entradas:
+        - command: Comando do .qry
         - i: Id de uma forma
         - polygon: Fila contendo as coordenadas do polígono atual
         - db: Lista contendo as formas do .geo
         - txt: Ponteiro para um arquivo .txt
     
+    # Saída:
+        - string
+
     # Descrição:
         - Insere em polygon a coordenada âncora da forma com
           id = i
@@ -24,17 +81,17 @@
           se ambas tiverem o mesmo valor para x, escolher a com
           o menor valor de y
 
-        - TXT: Reportar a coordenada inserida e os dados da figura
+        - Retorna a string a ser inserida no .txt
 */
-void inp(string i, queue polygon, llist db, FILE *txt) {
+string inp(string i, queue polygon, llist db) {
     if(i == NULL) {
         printf("WARNING: Missing a parameter for inp\n");
         return NULL;
     }
 
     Splited splt;
-    point p;
-    double x, y;
+    string coordinate;
+    string toReport;
     // Percorrer db em busca do forma com id i
     for(item li = GetFirstItem(db); li != NULL; li = GetNextItem(li)) {
         splt = split(GetItemElement(li), " ");
@@ -45,38 +102,18 @@ void inp(string i, queue polygon, llist db, FILE *txt) {
         }
 
         // Armazenar o valor da coordenada âncora da forma encontrada
-        string points = getFormAnchor(GetItemElement(li));
-        Splited spltP = split(points, " ");
-
-        x = strtod(getSubstring(spltP, 0), NULL);
-        y = strtod(getSubstring(spltP, 1), NULL);
-
-        p = newPoint(x, y);
-
-        // Caso a forma seja uma reta
-        if(getNumSubstrings(spltP) > 2) {
-            double x2, y2;
-
-            x2 = strtod(getSubstring(spltP, 2), NULL);
-            y2 = strtod(getSubstring(spltP, 3), NULL);
-
-            point P2 = newPoint(x2, y2);
-
-            if(comparePoints(p, P2) > 0) free(P2);
-            else {
-                free(p);
-                p = P2;
-            }
-        }
+        coordinate = getFormAnchor(GetItemElement(li));
 
         // Armazenar a coordenada encontrada em polygon
-        enqueue(polygon, p);
+        enqueue(polygon, coordinate);
+        toReport = reportForm(GetItemElement(li));
 
-        free(points);
         destroySplited(splt);
-        destroySplited(spltP);
-        return;
+        
+        break;
     }
+
+    return toReport;
 }
 
 /*
@@ -189,21 +226,44 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
 */
 void ups(string corb, string corp, string dx, string dy, llist selected);
 
-void executeQry(llist commands, llist database) {
+void executeQry(string BSD, string geoName, string qryName, llist commands, llist database) {
+    if(BSD == NULL || geoName == NULL || qryName == NULL || commands == NULL || database == NULL) return NULL;
+    
     // txt de saída utilizado por algumas qrys
     FILE *txt = NULL;
+    // String a ser inserida no .txt
+    string toReport;
 
     // Lista de formas selecionadas pelo comando sel
     llist selected = NULL;
 
-    // Fila de pontos para a criação de um polígono (Pontos adicionados pela função inp)
+    /*
+        - Fila de strings contendo as coordenadas âncoras das formas
+          indicadas no comando inp
+
+        - Na string as coordendas serão x e y respectivamente e separadas
+          por um espaço em branco
+    */
     queue polygon = NULL;
+
+    // Nome dos arquivos .txt e .svg resultantes da consulta
+    string *names;
+    names[0] = geoName;
+    names[1] = qryName;
+
+    string resultName = join(2, names, "-");
 
     Splited splt;
     for(item i = GetFirstItem(commands); i != NULL; i = GetNextItem(i)) {
         splt = split((char *)GetItemElement(i), " ");
 
-        if(strcmp(getSubstring(splt, 0), "inp") == 0) inp(getSubstring(splt, 1), polygon, database, txt);
+        if(strcmp(getSubstring(splt, 0), "inp") == 0) {
+            if(txt == NULL) createTXT(BSD, resultName);
+            if(polygon == NULL) newQueue();
+
+            toReport = inp(getSubstring(splt, 1), polygon, database);
+            reportTXT(txt, GetItemElement(i), toReport);
+        }
         else if(strcmp(getSubstring(splt, 0), "rmp") == 0) rmp(polygon, database);
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
         else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);
@@ -215,6 +275,8 @@ void executeQry(llist commands, llist database) {
 
         destroySplited(splt);
     }
+    if(txt != NULL) fclose(txt);
+    if(polygon != NULL) destroyQueue(polygon, free);
 
     // Criar o svg resultante das qrys
     
