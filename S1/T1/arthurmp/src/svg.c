@@ -150,13 +150,13 @@ void drawText(FILE *fptr, Splited splt) {
 
     string id = getSubstring(splt, 1);
     string x = getSubstring(splt, 2);
-    string y = getSubstring(split, 3);
+    string y = getSubstring(splt, 3);
     string corb = getSubstring(splt, 4);
     string corp = getSubstring(splt, 5);
     string a = getSubstring(splt, 6);
-    string *content = getAllSubStrings(splt);
+    string *content = getAllSubstrings(splt);
     content += 7;
-    string txto = join((getNumSubStrings(splt) - 7), content, " ");
+    string txto = join((getNumSubstrings(splt) - 7), content, " ");
 
     string anchor;
     if(strcmp(a, "i") == 0) anchor = "start";
@@ -166,13 +166,42 @@ void drawText(FILE *fptr, Splited splt) {
     fprintf(fptr, "<text text-anchor=\"%s\" x=\"%s\" y=\"%s\" ", anchor, x, y);
     fprintf(fptr, "style=\"fill:%s; fill-opacity:%s; ", corp, FILL_OPACITY);
     fprintf(fptr, "stroke:%s; stroke-width:%s;\"", corb, STROKE_WIDTH);
-    fprintf(">%s</text>\n", txto);
+    fprintf(fptr, ">%s</text>\n", txto);
 
     fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, corb);
     fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y, x);
     fprintf(fptr, "%s </text>\n", id);
 
     free(txto);
+}
+
+/*
+    # Entradas:
+        - fptr: Ponteiro para arquivo de escrita
+        - splt: Splited de um comando
+    
+    # Descrição:
+        - Cria uma reta do polígono em fptr com as informações em
+          splt
+*/
+void drawPolygon(FILE *fptr, Splited splt) {
+    if(fptr == NULL || splt == NULL) return;
+
+    string id = getSubstring(splt, 1);
+    string x1 = getSubstring(splt, 2);
+    string y1 = getSubstring(splt, 3);
+    string x2 = getSubstring(splt, 4);
+    string y2 = getSubstring(splt, 5);
+    string cor = getSubstring(splt, 6);
+    string strokeW = getSubstring(splt, 7);
+
+    fprintf(fptr, "<line x1=\"%s\" y1=\"%s\" ", x1, y1);
+    fprintf(fptr, "x2=\"%s\" y2=\"%s\" ", x2, y2);
+    fprintf(fptr, "style=\"stroke:%s; stroke-width:%s\" />\n", cor, strokeW);
+
+    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, cor);
+    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y1, x1);
+    fprintf(fptr, "%s </text>\n", id);
 }
 
 void generateSVG(string path, string name, llist data) {
@@ -183,16 +212,18 @@ void generateSVG(string path, string name, llist data) {
 
     Splited splt;
     for(item li = GetFirstItem(data); li != NULL; li = GetNextItem(li)) {
-        splt = split((string )GetItemElement(li), " ");
+        splt = split((string)GetItemElement(li), " ");
 
         if(strcmp(getSubstring(splt, 0), "c") == 0)
             drawCircle(fptr, splt);
-        if(strcmp(getSubstring(splt, 0), "r") == 0)
+        else if(strcmp(getSubstring(splt, 0), "r") == 0)
             drawRectangle(fptr, splt);
-        if(strcmp(getSubstring(splt, 0), "l") == 0)
+        else if(strcmp(getSubstring(splt, 0), "l") == 0)
             drawLine(fptr, splt);
-        if(strcmp(getSubstring(splt, 0), "t") == 0)
+        else if(strcmp(getSubstring(splt, 0), "t") == 0)
             drawText(fptr, splt);
+        else if(strcmp(getSubstring(splt, 0), "lp") == 0)
+            drawPolygon(fptr, splt);
 
         destroySplited(splt);
     }

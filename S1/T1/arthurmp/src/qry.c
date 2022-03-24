@@ -1,12 +1,14 @@
 #include<stdlib.h>
+#include<string.h>
 
 #include"qry.h"
 #include"split.h"
 #include"queue.h"
 #include"point.h"
 #include"forms.h"
+#include"line.h"
 
-// selected deve ser uma lista onde cada elemento é um ponteiro para um elemento de db
+#define MAX_SIZE 100
 
 /*
     # Entradas:
@@ -68,7 +70,6 @@ void reportTXT(FILE *txt, string command, string toReport) {
         - i: Id de uma forma
         - polygon: Fila contendo as coordenadas do polígono atual
         - db: Lista contendo as formas do .geo
-        - txt: Ponteiro para um arquivo .txt
     
     # Saída:
         - string: String contendo todas as informações da forma
@@ -103,7 +104,20 @@ string inp(string i, queue polygon, llist db) {
         }
 
         // Armazenar o valor da coordenada âncora da forma encontrada
-        coordinate = getFormAnchor(GetItemElement(li));
+        if(strcmp(getFormType(GetItemElement(li)), "reta") == 0) {
+            string temp = getFormAnchor(GetItemElement(li));
+            Splited spltt = split(temp, " ");
+
+            string points[2];
+            points[0] = getSubstring(spltt, 0);
+            points[1] = getSubstring(spltt, 1);
+
+            coordinate = join(2, points, " ");
+
+            free(temp);
+            destroySplited(spltt);
+        }
+        else coordinate = getFormAnchor(GetItemElement(li));
 
         // Armazenar a coordenada encontrada em polygon
         enqueue(polygon, coordinate);
@@ -157,7 +171,48 @@ string rmp(queue polygon) {
 
         - As linhas de preenchimento são separadas por uma distância vertical de d
 */
-void pol(string i, string d, string e, string corb, string corp, queue polygon, llist db);
+void pol(string i, string d, string e, string corb, string corp, queue polygon, llist db) {
+    // Valores utilizados para a criação das linhas no svg
+    int id = atoi(i);
+    string cor = corb;
+
+    // Lista contendo as retas que formam o polígono
+    llist polLines = NewList();
+    
+    // Inserir as retas que formam o polígono em db
+    string temp = newEmptyString(MAX_SIZE);
+    string current = (string) dequeue(polygon);
+    string first = copyString(current);
+    string next, toInsert;
+    
+    // Laço para as retas que formam o polígono
+    while(!isQueueEmpty(polygon)) {
+        // Ponto final da reta
+        next = (string) dequeue(polygon);
+        if(next == NULL) next = first;
+
+        // Criar comando das retas que formam o polígono
+        sprintf(temp, "lp %d %s %s %s %s", id, current, next, cor, e);
+        toInsert = copyString(temp);
+        InsertEnd(db, toInsert);
+
+        // Criar e armazenar equação da reta
+        sprintf(temp, "%s %s", current, next);
+        toInsert = copyString(temp);
+        InsertEnd(polLines, toInsert);
+
+        // Informações para próxima interação
+        id++;
+        free(current);
+        current = next;
+    }
+    free(first);
+    free(temp);
+    destroyQueue(polygon, NULL);
+
+    // Laço para as retas internas ao polígono
+
+}
 
 /*
     # Entrada:
@@ -180,8 +235,10 @@ void clp(queue polygon) {
         - h: Altura da região
         - db: Lista contendo as formas do .geo
         - selected: Lista para armazenar as formas selecionadas
-        - txt: Ponteiro para um arquivo .txt
     
+    # Saída:
+        - string: Reportar id e tipo das figuras selecionadas
+
     # Descrição:
         - Seleciona as figuras INTEIRAMENTE dentro da região delimitada
 
@@ -189,23 +246,24 @@ void clp(queue polygon) {
                Desenhar um anel vermelho ao redor da coordenada âncora das figuras
                selecionadas
         
-        - TXT: Reportar id e tipo das figuras selecionadas
+        - Retorna o id das figuras selecionadas
 */
-void sel(string x, string y, string w, string h, llist db, llist selected, FILE *txt);
+string sel(string x, string y, string w, string h, llist db, llist selected);
 
 /*
     # Entradas:
         - selected: Lista com as formas selecionadas
-        - txt: Ponteiro para um arquivo .txt
+        - db: Lista contendo as formas do .geo
+
+    # Saída:
+        - string: Reportar todos os dados das figuras removidas
 
     # Descrição:
         - Remove as figuras em selected de db
 
         - SVG: As figuras removidas não devem aparecer
-
-        - TXT: Reportar todos os dados das figuras removidas
 */
-void dels(llist selected, FILE *txt);
+string dels(llist selected, llist db);
 
 /*
     # Entradas:
@@ -232,7 +290,7 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
         - selected: Lista com as formas selecionadas
     
     # Descrição:
-        - Altera as cores e a posiçãodas formas em selected
+        - Altera as cores e a posição das formas em selected
 
         - Transladar as mesmas formas em dx e dy
 
@@ -240,14 +298,17 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
 void ups(string corb, string corp, string dx, string dy, llist selected);
 
 void executeQry(string BSD, string geoName, string qryName, llist commands, llist database) {
-    if(BSD == NULL || geoName == NULL || qryName == NULL || commands == NULL || database == NULL) return NULL;
+    if(BSD == NULL || geoName == NULL || qryName == NULL || commands == NULL || database == NULL) return;
     
     // txt de saída utilizado por algumas qrys
     FILE *txt = NULL;
     // String a ser inserida no .txt
     string toReport;
 
-    // Lista de formas selecionadas pelo comando sel
+    /*
+        - Lista de ponteiros para os itens contendo as formas
+          indicadas pelo comando sel
+    */
     llist selected = NULL;
 
     /*
@@ -260,7 +321,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
     queue polygon = NULL;
 
     // Nome dos arquivos .txt e .svg resultantes da consulta
-    string *names;
+    string names[2];
     names[0] = geoName;
     names[1] = qryName;
 
@@ -268,7 +329,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
 
     Splited splt;
     for(item i = GetFirstItem(commands); i != NULL; i = GetNextItem(i)) {
-        splt = split((char *)GetItemElement(i), " ");
+        splt = split((string)GetItemElement(i), " ");
 
         if(strcmp(getSubstring(splt, 0), "inp") == 0) {
             if(txt == NULL) createTXT(BSD, resultName);
@@ -283,11 +344,11 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
         }
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
         else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);
-        else if(strcmp(getSubstring(splt, 0), "sel") == 0) sel(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected, txt);
-        else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(selected, txt);
-        else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
-        else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
-        else printf("WARNING: %s is not a valid comand\n", getSubstring(splt, 0));
+        //else if(strcmp(getSubstring(splt, 0), "sel") == 0) sel(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
+        //else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(selected, database);
+        //else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
+        //else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
+        else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
 
         destroySplited(splt);
     }
