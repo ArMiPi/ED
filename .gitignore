@@ -1051,7 +1051,9 @@ Mkfile.old
 dkms.conf
 
 ###### LOCAL FILES ######
-S1/projeto-descricao-geral.pdf
-S1/T1/arthurmp/LEIA-ME.txt
-S1/T1/projeto-ed1-2022-01.pdf
+*.pdf
+*.o
+*.exe
+*.txt
+*.svg
 S1/T1/BED

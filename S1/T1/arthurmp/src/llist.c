@@ -11,6 +11,7 @@ typedef struct _item {
 
 typedef struct _llist {
     LLITEM *head;
+    LLITEM *tail;
 }LLIST;
 
 LLITEM *NewItem() {
@@ -35,6 +36,7 @@ llist NewList() {
     }
 
     lst->head = NULL;
+    lst->tail = NULL;
 
     return lst;
 }
@@ -61,6 +63,9 @@ item InsertStart(llist lst, element elem) {
     if(!IsListEmpty(lst)) l->head->prev = lli;
     l->head = lli;
 
+    // Verificar se tail == NULL
+    if(l->tail == NULL) l->tail = l->head;
+
     return lli;
 }
 
@@ -77,6 +82,10 @@ item InsertEnd(llist lst, element elem) {
     LLITEM *last = GetLastItem(lst);
     last->next = lli;
     lli->prev = last;
+
+    // Atualizar valor de tail
+    LLIST *l = (LLIST *) lst;
+    l->tail = lli;
 
     return lli;
 }
@@ -136,6 +145,7 @@ element RemoveItem(llist lst, item li) {
     LLITEM *lli = (LLITEM *) li;
 
     if(GetFirstItem(lst) == li) l->head = l->head->next;
+    if(GetLastItem(lst) == li) l->tail = l->tail->prev;
     if(lli->prev != NULL) lli->prev->next = lli->next;
     if(lli->next != NULL) lli->next->prev = lli->prev;
 
@@ -171,10 +181,7 @@ item GetLastItem(llist lst) {
 
     LLIST *l = (LLIST *) lst;
     
-    LLITEM *lli = l->head;
-    while(lli->next != NULL) lli = lli->next;
-
-    return lli;
+    return l->tail;
 }
 
 item GetNextItem(item li) {
