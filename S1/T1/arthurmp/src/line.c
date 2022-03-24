@@ -23,7 +23,7 @@ string lineEquation(string points) {
 
     // Criar string com a equação da reta
     string temp = newEmptyString(MAX_SIZE);
-    sprintf(temp, "y = %d x + %d", a, b);
+    sprintf(temp, "y = %lf x + %lf", a, b);
 
     string equation = copyString(temp);
 
@@ -34,7 +34,7 @@ string lineEquation(string points) {
 }
 
 double lineM(string points) {
-    if(points == NULL) return NULL;
+    if(points == NULL) return 0.0;
 
     Splited splt = split(points, " ");
 
@@ -47,7 +47,7 @@ double lineM(string points) {
 }
 
 double lineX(string lineEquation, double y) {
-    if(lineEquation == NULL || y == NULL) return 0.0;
+    if(lineEquation == NULL) return 0.0;
 
     Splited splt = split(lineEquation, " ");
 

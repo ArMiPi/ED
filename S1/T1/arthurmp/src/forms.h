@@ -52,8 +52,10 @@ string getFormID(string command);
         - Retorna uma string contendo o ponto âncora da forma em command
 
         - Caso a forma seja uma linha, será retornada uma string contendo
-          os dois pontos indicados em command, indicados por (x1, y1) e
-          (x2, y2), respectivamente
+          a coordenada com menor valor de x, caso ambas possuam o mesmo
+          valor de x, será retornada a coordenada com menor valor de y,
+          nas primeiras posições da string.
+          Ex: Se x2 < x1 será retornado x2 y2 x1 y1
 */
 string getFormAnchor(string command);
 
