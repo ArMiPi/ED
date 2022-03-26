@@ -7,7 +7,8 @@ CC = gcc
 CC_FLAGS = -std=c99					\
 		   -fstack-protector-all	\
 		   -Wall					\
-		   -ggdb3
+		   -ggdb3					\
+		   -g
 
 # Ligação com as bibliotecas EX: -lm
 #LBFLAGS = -lm

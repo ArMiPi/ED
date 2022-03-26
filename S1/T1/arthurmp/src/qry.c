@@ -248,7 +248,9 @@ void clp(queue polygon) {
         
         - Retorna o id das figuras selecionadas
 */
-string sel(string x, string y, string w, string h, llist db, llist selected);
+string sel(string x, string y, string w, string h, llist db, llist selected) {
+    
+}
 
 /*
     # Entradas:
