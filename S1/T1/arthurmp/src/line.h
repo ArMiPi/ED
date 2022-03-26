@@ -1,6 +1,7 @@
 #ifndef LINE_H
 #define LINE_H
 
+#include<stdbool.h>
 #include"strings.h"
 
 /*
@@ -45,7 +46,7 @@ string lineEquation(string points);
 double lineM(string points);
 
 /*
-    # Entrada:
+    # Entradas:
         - lineEq: string contendo a equação de uma reta
         - y: Coordenada y
     
@@ -57,5 +58,25 @@ double lineM(string points);
           pretencente à reta lineEq
 */
 double lineX(string lineEq, double y);
+
+/*
+    # Entradas:
+        - points: string contendo contendo os pontos que delimitam a reta
+        - area: string contendo os pontos que delimitam a área
+    
+    # Saída:
+        - true/false
+    
+    # Descrição:
+        - Retorna true caso a reta esterja totalmente contida em area,
+          false caso contrário
+        
+        - points deve ser != NULL e deve apresentar as coordenadas na forma
+          "x0 y0 x1 y1"
+        
+        - area deve ser != NULL e deve apresentar as coordenadas na forma
+          "x y w h"
+*/
+bool isLineInArea(string points, string area);
 
 #endif

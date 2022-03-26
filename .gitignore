@@ -1051,9 +1051,9 @@ Mkfile.old
 dkms.conf
 
 ###### LOCAL FILES ######
-*.pdf
 *.o
-*.exe
+*pdf
 *.txt
-*.svg
-S1/T1/BED
+S1/T1/gabarito
+S1/T1/testes
+S1/T1/arthurmp/src/ted

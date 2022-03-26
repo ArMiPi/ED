@@ -56,3 +56,30 @@ double lineX(string lineEquation, double y) {
 
     return (y - b) / a;
 }
+
+bool isLineInArea(string points, string area) {
+    if(points == NULL || area == NULL) return false;
+
+    Splited spltP = split(points, " ");
+    Splited spltA = split(area, " ");
+
+    // Valores da reta
+    double x0 = strtod(getSubstring(spltP, 0), NULL);
+    double y0 = strtod(getSubstring(spltP, 1), NULL);
+    double x1 = strtod(getSubstring(spltP, 2), NULL);
+    double y1 = strtod(getSubstring(spltP, 3), NULL);
+
+    // Valores da área
+    double x = strtod(getSubstring(spltA, 0), NULL);
+    double y = strtod(getSubstring(spltA, 0), NULL);
+    double w = strtod(getSubstring(spltA, 0), NULL);
+    double h = strtod(getSubstring(spltA, 0), NULL);
+
+    // Definir se a reta pertence à area
+    if(x0 < x || x0 > x+w) return false;
+    if(x1 < x || x1 > x+w) return false;
+    if(y0 < y || y0 > y+h) return false;
+    if(y1 < y || y1 > y+h) return false;
+
+    return true;
+}
