@@ -433,7 +433,59 @@ void dels(FILE *txt, llist selected, llist db) {
         - Criar novas formas em db semelhantes às em selected, transladadas em dx e dy, com
           as cores indicadas e id sequencial iniciado em i 
 */
-void dps(string i, string dx, string dy, string corb, string corp, llist db, llist selected);
+void dps(string i, string dx, string dy, string corb, string corp, llist db, llist selected) {
+    if(db == NULL || selected == NULL) return;
+
+    int ID = atoi(i);
+    double DX = strtod(dx, NULL);
+    double DY = strtod(dy, NULL);
+
+    item forma;
+    string command, toInsert;
+    Splited splt;
+    for(item li = GetFirstItem(selected); li != NULL; li = GetNextItem(li)) {
+        forma = GetItemElement(li);
+        command = GetItemElement(forma);
+        splt = split(command, " ");
+
+        if(strcmp(getFormType(command), "circulo") == 0) {
+            toInsert = newEmptyString(MAX_SIZE);
+
+            sprintf(toInsert, "c %d %lf %lf %s %s %s", ID, strtod(getSubstring(splt, 2), NULL)+DX, strtod(getSubstring(splt, 3), NULL)+DY, getSubstring(splt, 4), corb, corp);
+
+            InsertEnd(db, toInsert);
+        }
+        else if(strcmp(getFormType(command), "retangulo") == 0) {
+            toInsert = newEmptyString(MAX_SIZE);
+
+            sprintf(toInsert, "r %d %lf %lf %s %s %s %s", ID, strtod(getSubstring(splt, 2), NULL)+DX, strtod(getSubstring(splt, 3), NULL)+DY, getSubstring(splt, 4), getSubstring(splt, 5), corb, corp);
+
+            InsertEnd(db, toInsert);
+        }
+        else if(strcmp(getFormType(command), "reta") == 0) {
+            toInsert = newEmptyString(MAX_SIZE);
+
+            sprintf(toInsert, "l %d %lf %lf %lf %lf %s", ID, strtod(getSubstring(splt, 2), NULL)+DX, strtod(getSubstring(splt, 3), NULL)+DY, strtod(getSubstring(splt, 4), NULL)+DX, strtod(getSubstring(splt, 5), NULL)+DY, corb);
+
+            InsertEnd(db, toInsert);
+        }
+        else if(strcmp(getFormType(command), "texto") == 0) {
+            toInsert = newEmptyString(MAX_SIZE);
+
+            string *content = getAllSubstrings(splt);
+            content += 7;
+            string txto = join((getNumSubstrings(splt) - 7), content, " ");
+
+            sprintf(toInsert, "t %d %lf %lf %s %s %s %s", ID, strtod(getSubstring(splt, 2), NULL)+DX, strtod(getSubstring(splt, 3), NULL)+DY, corb, corp, getSubstring(splt, 6), txto);
+
+            InsertEnd(db, toInsert);
+            free(txto);
+        }
+
+        destroySplited(splt);
+        ID++;
+    }
+}
 
 /*
     # Entradas:
@@ -449,7 +501,9 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
         - Transladar as mesmas formas em dx e dy
 
 */
-void ups(string corb, string corp, string dx, string dy, llist selected);
+void ups(string corb, string corp, string dx, string dy, llist selected) {
+    
+}
 
 void executeQry(string BSD, string geoName, string qryName, llist commands, llist database) {
     if(BSD == NULL || geoName == NULL || qryName == NULL || commands == NULL || database == NULL) return;
@@ -521,7 +575,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
             selSize = ListSize(selected);
         }
         else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(txt, selected, database);
-        //else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
+        else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
         //else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
         //else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
 
