@@ -39,6 +39,18 @@ llist NewList();
 bool IsListEmpty(llist lst);
 
 /*
+    # Entrada:
+        - lst: Lista
+    
+    # Saída:
+        - int
+
+    # Descrição:
+        - Retorna a quantidade de elementos armazenados em lst
+*/
+int ListSize(llist lst);
+
+/*
     # Entradas:
         - lst: Lista
         - elem: Elemento

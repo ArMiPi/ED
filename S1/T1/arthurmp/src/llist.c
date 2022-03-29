@@ -49,6 +49,16 @@ bool IsListEmpty(llist lst) {
     return l->head == NULL;
 }
 
+int ListSize(llist lst) {
+    if(lst == NULL) return 0;
+
+    int size = 0;
+
+    for(item li = GetFirstItem(lst); li != NULL; li = GetNextItem(li)) size++;
+
+    return size;
+}
+
 item InsertStart(llist lst, element elem) {
     if(lst == NULL || elem == NULL) return NULL;
 
