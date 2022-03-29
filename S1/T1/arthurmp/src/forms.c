@@ -145,7 +145,7 @@ string reportForm(string command) {
         string preenchimento = getSubstring(splt, 5);
         string borda = getSubstring(splt, 6);
 
-        sprintf(temp, "%s\nâncora em {%s, %s}\nraio: %s\npreenchimento: %s\nborda: %s", type, x, y, raio, preenchimento, borda);
+        sprintf(temp, "%s\nancora em {%s, %s}\nraio: %s\npreenchimento: %s\nborda: %s\n", type, x, y, raio, preenchimento, borda);
     }
     else if(strcmp(type, "retangulo") == 0) {
         string x = getSubstring(splt, 2);
@@ -155,9 +155,9 @@ string reportForm(string command) {
         string preenchimento = getSubstring(splt, 6);
         string borda = getSubstring(splt, 7);
 
-        sprintf(temp, "%s\nâncora em {%s, %s}\nlargura: %s\naltura: %s\npreenchimento: %s\nborda: %s", type, x, y, width, height, preenchimento, borda);
+        sprintf(temp, "%s\nancora em {%s, %s}\nlargura: %s\naltura: %s\npreenchimento: %s\nborda: %s\n", type, x, y, width, height, preenchimento, borda);
     }
-    else if(strcmp(type, "reta")) {
+    else if(strcmp(type, "reta") == 0) {
         point P1 = newPoint(strtod(getSubstring(splt, 2), NULL), strtod(getSubstring(splt, 3), NULL));
         point P2 = newPoint(strtod(getSubstring(splt, 4), NULL), strtod(getSubstring(splt, 5), NULL));
         string x, y;
@@ -176,7 +176,7 @@ string reportForm(string command) {
 
         string cor = getSubstring(splt, 6);
 
-        sprintf(temp, "%s\nâncora em {%s, %s}\ncor: %s", type, x, y, cor);
+        sprintf(temp, "%s\nancora em {%s, %s}\ncor: %s\n", type, x, y, cor);
     }
     else if(strcmp(type, "texto") == 0) {
         string x = getSubstring(splt, 2);
@@ -188,7 +188,7 @@ string reportForm(string command) {
         content += 7;
         string txto = join((getNumSubstrings(splt) - 7), content, " ");
 
-        sprintf(temp, "%s\nâncora em {%s, %s}\nborda: %s\npreenchimento: %s\na: %s\ntexto: %s", type, x, y, borda, preenchimento, anchorPos, txto);
+        sprintf(temp, "%s\nancora em {%s, %s}\nborda: %s\npreenchimento: %s\na: %s\ntexto: %s\n", type, x, y, borda, preenchimento, anchorPos, txto);
         
         free(txto);
     }

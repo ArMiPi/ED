@@ -47,6 +47,7 @@ clean:
 rmproper: clean
 	rm -rf ${EXECUTAVEL}
 	rm ../../testes/BSD/*.svg
+	rm ../../testes/BSD/*.txt
 
 # run: ted
 #	./ted
@@ -87,3 +88,9 @@ geo: ${EXECUTAVEL}
 	./${EXECUTAVEL} -e ../../testes/BED/ -f triangulo-ttpr-hsp.geo -o ../../testes/BSD/
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/
+
+qry:
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/001-dels.qry
+
+teste:
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/002-dps.qry

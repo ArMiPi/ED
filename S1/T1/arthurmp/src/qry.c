@@ -7,6 +7,7 @@
 #include"point.h"
 #include"forms.h"
 #include"line.h"
+#include"svg.h"
 
 #define MAX_SIZE 100
 
@@ -62,6 +63,48 @@ void reportTXT(FILE *txt, string command, string toReport) {
 
     fprintf(txt, "[*] %s\n", command);
     fprintf(txt, "%s\n\n", toReport);
+}
+
+/*
+    # Entrada:
+        - txt: Ponteiro para um arquivo .txt
+        - selected: Ponteiro para um elemento de selected
+        - selSize: Tamanho de selected antes de um selplus
+        - selPlusSize: Tamanho de selected após um selplus
+        - command: Comando do .qry
+
+    # Descrição:
+        - Reporta em txt o comando command e todas as informações das formas em selected
+          a partir do item indicado por selectedItem
+
+        - Se selSize == -1 || selPlusSize == -1 os parâmetros não serão inseridos em txt
+
+        - txt != NULL 
+*/
+void reportSel(FILE *txt, item selectedItem, int selSize, int selPlusSize, string command) {
+    if(txt == NULL) return;
+
+    if(selectedItem == NULL || command == NULL) {
+        reportTXT(txt, command, NULL);
+        return;
+    }
+
+    fprintf(txt, "[*] %s\n", command);
+
+    item forma;
+    string comandoForma;
+    Splited splt;
+    for(item li = selectedItem; li != NULL; li = GetNextItem(li)) {
+        forma = GetItemElement(li);
+        comandoForma = GetItemElement(forma);
+
+        splt = split(comandoForma, " ");
+
+        fprintf(txt, "%s %s\n", getSubstring(splt, 1), getFormType(comandoForma));
+    
+        destroySplited(splt);
+    }
+    fprintf(txt, "\n");
 }
 
 /*
@@ -237,23 +280,112 @@ void clp(queue polygon) {
         - selected: Lista para armazenar as formas selecionadas
     
     # Saída:
-        - string: Reportar id e tipo das figuras selecionadas
+        - string: Comando para inserir a área no .svg
 
     # Descrição:
         - Seleciona as figuras INTEIRAMENTE dentro da região delimitada
-
-        - SVG: Desenhar a região
-               Desenhar um anel vermelho ao redor da coordenada âncora das figuras
-               selecionadas
         
-        - Retorna o id das figuras selecionadas
+        - selected armazena os itens contendo as formas selecionadas
+
+        - Desconsidera seleções anteriores, ou seja, "esvazia" selected
 */
-string sel(string x, string y, string w, string h, llist db, llist selected) {
+void sel(llist selected) {
+    if(selected == NULL) return;
     
+    // Desconsiderar seleções anteriores
+    while(!IsListEmpty(selected)) RemoveItem(selected, GetFirstItem(selected));
+    DestroyList(selected, NULL);
+    selected = NewList();
 }
 
 /*
     # Entradas:
+        - x: Coordenada x do ponto de ancoragem da região
+        - y: Coordenada y do ponto de ancoragem da região
+        - w: Largura da região
+        - h: Altura da região
+        - db: Lista contendo as formas do .geo
+        - selected: Lista para armazenar as formas selecionadas
+    
+    # Saída:
+        - string: Comando para inserir a área no .svg
+
+    # Descrição:
+        - Seleciona as figuras INTEIRAMENTE dentro da região delimitada
+        
+        - selected armazena os itens contendo as formas selecionadas
+*/
+void selplus(string x, string y, string w, string h, llist db, llist selected) {
+    if(x == NULL || y == NULL || w == NULL || h == NULL || db == NULL) return;
+
+    string temp[4];
+    temp[0] = x;
+    temp[1] = y;
+    temp[2] = w;
+    temp[3] = h;
+
+    string area = join(4, temp, " ");
+    string points = newEmptyString(MAX_SIZE);
+    string command;
+    Splited splt;
+    // Procurar pelas formas contidas em area
+    for(item li = GetFirstItem(db); li != NULL; li = GetNextItem(li)) {
+        command = (string) GetItemElement(li);
+        splt = split(command, " ");
+
+        if(strcmp(getFormType(command), "circulo") == 0) {
+            double x = strtod(getSubstring(splt, 2), NULL);
+            double y = strtod(getSubstring(splt, 3), NULL);
+            double r = strtod(getSubstring(splt, 4), NULL);
+
+            sprintf(points, "%lf %lf %lf %lf", x-r, y, x+r, y);
+            if(!isLineInArea(points, area)) continue;
+
+            sprintf(points, "%lf %lf %lf %lf", x, y-r, x, y+r);
+            if(isLineInArea(points, area)) InsertEnd(selected, li);
+        }
+        else if(strcmp(getFormType(command), "retangulo") == 0) {
+            double x = strtod(getSubstring(splt, 2), NULL);
+            double y = strtod(getSubstring(splt, 3), NULL);
+            double w = strtod(getSubstring(splt, 4), NULL);
+            double h = strtod(getSubstring(splt, 5), NULL);
+
+            sprintf(points, "%lf %lf %lf %lf", x, y, x+w, y+h);
+            if(isLineInArea(points, area)) InsertEnd(selected, li);
+        }
+        else if(strcmp(getFormType(command), "reta") == 0) {
+            double x0 = strtod(getSubstring(splt, 2), NULL);
+            double y0 = strtod(getSubstring(splt, 3), NULL);
+            double x1 = strtod(getSubstring(splt, 4), NULL);
+            double y1 = strtod(getSubstring(splt, 5), NULL);
+
+            sprintf(points, "%lf %lf %lf %lf", x0, y0, x1, y1);
+            if(isLineInArea(points, area)) InsertEnd(selected, li);
+        }
+        else if(strcmp(getFormType(command), "texto") == 0) {
+            double x = strtod(getSubstring(splt, 2), NULL);
+            double y = strtod(getSubstring(splt, 3), NULL);
+
+            point P = newPoint(x, y);
+
+            if(isPointInArea(P, area)) InsertEnd(selected, li);
+        }
+
+        destroySplited(splt);
+    }
+
+    // Criar comando para inserir a área no .svg
+    string areaCmd = newEmptyString(MAX_SIZE);
+    sprintf(areaCmd, "r 0 %s red white", area);
+    InsertEnd(db, areaCmd);
+
+    free(points);
+    free(area);
+}
+
+/*
+    # Entradas:
+        - txt: Ponteiro para um arquivo.txt
         - selected: Lista com as formas selecionadas
         - db: Lista contendo as formas do .geo
 
@@ -265,7 +397,27 @@ string sel(string x, string y, string w, string h, llist db, llist selected) {
 
         - SVG: As figuras removidas não devem aparecer
 */
-string dels(llist selected, llist db);
+void dels(FILE *txt, llist selected, llist db) {
+    if(txt == NULL || selected == NULL || db == NULL) return;
+
+    fprintf(txt, "[*] del\n");
+
+    item li;
+    string forma, toReport;
+    while(!IsListEmpty(selected)) {
+        li = GetItemElement(GetFirstItem(selected));
+        forma = GetItemElement(li);
+        toReport = reportForm(forma);
+
+        fprintf(txt, "%s\n", toReport);
+
+        li = RemoveItem(selected, GetFirstItem(selected));
+        RemoveItem(db, li);
+        free(forma);
+        free(toReport);
+    }
+    fprintf(txt, "\n");
+}
 
 /*
     # Entradas:
@@ -304,6 +456,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
     
     // txt de saída utilizado por algumas qrys
     FILE *txt = NULL;
+
     // String a ser inserida no .txt
     string toReport;
 
@@ -312,6 +465,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
           indicadas pelo comando sel
     */
     llist selected = NULL;
+    int selSize = 0;
 
     /*
         - Fila de strings contendo as coordenadas âncoras das formas
@@ -323,11 +477,14 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
     queue polygon = NULL;
 
     // Nome dos arquivos .txt e .svg resultantes da consulta
+    Splited name = split(qryName, "/");
     string names[2];
     names[0] = geoName;
-    names[1] = qryName;
+    names[1] = getSubstring(name, getNumSubstrings(name)-1);
 
     string resultName = join(2, names, "-");
+
+    destroySplited(name);
 
     Splited splt;
     for(item i = GetFirstItem(commands); i != NULL; i = GetNextItem(i)) {
@@ -340,23 +497,41 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
             toReport = inp(getSubstring(splt, 1), polygon, database);
             reportTXT(txt, GetItemElement(i), toReport);
         }
-        else if(strcmp(getSubstring(splt, 0), "rmp") == 0) {
+        /*else if(strcmp(getSubstring(splt, 0), "rmp") == 0) {
             toReport = rmp(polygon);
             reportTXT(txt, GetItemElement(i), toReport);
         }
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
-        else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);
-        //else if(strcmp(getSubstring(splt, 0), "sel") == 0) sel(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
-        //else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(selected, database);
+        else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);*/
+        else if(strcmp(getSubstring(splt, 0), "sel") == 0) {
+            if(txt == NULL) txt = createTXT(BSD, resultName);
+            if(selected == NULL) selected = NewList();
+            sel(selected);
+            selplus(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
+            
+            reportSel(txt, GetFirstItem(selected), -1, -1, GetItemElement(i));
+            selSize = ListSize(selected);
+        }
+        else if(strcmp(getSubstring(splt, 0), "selplus") == 0) {
+            item first = GetLastItem(selected);
+
+            selplus(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
+            
+            reportSel(txt, first, selSize, ListSize(selected) - selSize, GetItemElement(i));
+            selSize = ListSize(selected);
+        }
+        else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(txt, selected, database);
         //else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
         //else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
-        else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
+        //else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
 
         destroySplited(splt);
     }
+
     if(txt != NULL) fclose(txt);
     if(polygon != NULL) destroyQueue(polygon, free);
+    if(selected != NULL) DestroyList(selected, NULL);
 
     // Criar o svg resultante das qrys
-    
+    generateSVG(BSD, resultName, database);
 }

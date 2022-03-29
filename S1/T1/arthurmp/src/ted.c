@@ -6,6 +6,7 @@
 #include"database.h"
 #include"llist.h"
 #include"svg.h"
+#include"qry.h"
 
 int main(int argc, char *argv[]) {
     // Leitura dos parâmetros de entrada do programa
@@ -22,7 +23,7 @@ int main(int argc, char *argv[]) {
         database qry = readData(getBED(prms), getQRY(prms));
 
         // Executar comandos do .qry
-
+        executeQry(getBSD(prms), getDBname(geo), getDBname(qry), getDBdata(qry), getDBdata(geo));
 
         destroyDB(qry);
     }

@@ -58,7 +58,6 @@ FILE *createSVG(string path, string name) {
 void drawCircle(FILE *fptr, Splited splt) {
     if(fptr == NULL || splt == NULL) return;
 
-    string id = getSubstring(splt, 1);
     string x = getSubstring(splt, 2);
     string y = getSubstring(splt, 3);
     string r = getSubstring(splt, 4);
@@ -70,10 +69,6 @@ void drawCircle(FILE *fptr, Splited splt) {
     fprintf(fptr, "r=\"%s\" ", r);
     fprintf(fptr, "cy=\"%s\" ", y);
     fprintf(fptr, "cx=\"%s\" />\n", x);
-
-    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, corb);
-    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y, x);
-    fprintf(fptr, "%s </text>\n", id);
 }
 
 /*
@@ -88,7 +83,6 @@ void drawCircle(FILE *fptr, Splited splt) {
 void drawRectangle(FILE *fptr, Splited splt) {
     if(fptr == NULL || splt == NULL) return;
 
-    string id = getSubstring(splt, 1);
     string x = getSubstring(splt, 2);
     string y = getSubstring(splt, 3);
     string w = getSubstring(splt, 4);
@@ -102,10 +96,6 @@ void drawRectangle(FILE *fptr, Splited splt) {
     fprintf(fptr, "width=\"%s\" ", w);
     fprintf(fptr, "y=\"%s\" ", y);
     fprintf(fptr, "x=\"%s\" />\n", x);
-
-    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, corb);
-    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y, x);
-    fprintf(fptr, "%s </text>\n", id);
 }
 
 /*
@@ -120,7 +110,6 @@ void drawRectangle(FILE *fptr, Splited splt) {
 void drawLine(FILE *fptr, Splited splt) {
     if(fptr == NULL || splt == NULL) return;
 
-    string id = getSubstring(splt, 1);
     string x1 = getSubstring(splt, 2);
     string y1 = getSubstring(splt, 3);
     string x2 = getSubstring(splt, 4);
@@ -130,10 +119,6 @@ void drawLine(FILE *fptr, Splited splt) {
     fprintf(fptr, "<line x1=\"%s\" y1=\"%s\" ", x1, y1);
     fprintf(fptr, "x2=\"%s\" y2=\"%s\" ", x2, y2);
     fprintf(fptr, "style=\"stroke:%s; stroke-width:%s\" />\n", cor, STROKE_WIDTH);
-
-    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, cor);
-    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y1, x1);
-    fprintf(fptr, "%s </text>\n", id);
 }
 
 /*
@@ -148,7 +133,6 @@ void drawLine(FILE *fptr, Splited splt) {
 void drawText(FILE *fptr, Splited splt) {
     if(fptr == NULL || splt == NULL) return;
 
-    string id = getSubstring(splt, 1);
     string x = getSubstring(splt, 2);
     string y = getSubstring(splt, 3);
     string corb = getSubstring(splt, 4);
@@ -168,10 +152,6 @@ void drawText(FILE *fptr, Splited splt) {
     fprintf(fptr, "stroke:%s; stroke-width:%s;\"", corb, STROKE_WIDTH);
     fprintf(fptr, ">%s</text>\n", txto);
 
-    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, corb);
-    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y, x);
-    fprintf(fptr, "%s </text>\n", id);
-
     free(txto);
 }
 
@@ -187,7 +167,6 @@ void drawText(FILE *fptr, Splited splt) {
 void drawPolygon(FILE *fptr, Splited splt) {
     if(fptr == NULL || splt == NULL) return;
 
-    string id = getSubstring(splt, 1);
     string x1 = getSubstring(splt, 2);
     string y1 = getSubstring(splt, 3);
     string x2 = getSubstring(splt, 4);
@@ -198,10 +177,6 @@ void drawPolygon(FILE *fptr, Splited splt) {
     fprintf(fptr, "<line x1=\"%s\" y1=\"%s\" ", x1, y1);
     fprintf(fptr, "x2=\"%s\" y2=\"%s\" ", x2, y2);
     fprintf(fptr, "style=\"stroke:%s; stroke-width:%s\" />\n", cor, strokeW);
-
-    fprintf(fptr, "<text style=\"font-size:%spx; line-height:%s%%; fill: %s\" ", FONT_SIZE, LINE_HEIGHT, cor);
-    fprintf(fptr, "font-size=\"%s\" y=\"%s\" x=\"%s\" >", FONT_SIZE, y1, x1);
-    fprintf(fptr, "%s </text>\n", id);
 }
 
 void generateSVG(string path, string name, llist data) {

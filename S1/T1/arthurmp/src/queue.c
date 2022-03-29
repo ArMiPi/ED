@@ -3,7 +3,7 @@
 
 #include"queue.h"
 
-#define MAX_QUEUE_SIZE 50
+#define MAX_QUEUE_SIZE 200
 
 typedef struct queueItem {
     element elem;

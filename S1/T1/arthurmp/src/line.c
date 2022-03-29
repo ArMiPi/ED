@@ -71,9 +71,9 @@ bool isLineInArea(string points, string area) {
 
     // Valores da área
     double x = strtod(getSubstring(spltA, 0), NULL);
-    double y = strtod(getSubstring(spltA, 0), NULL);
-    double w = strtod(getSubstring(spltA, 0), NULL);
-    double h = strtod(getSubstring(spltA, 0), NULL);
+    double y = strtod(getSubstring(spltA, 1), NULL);
+    double w = strtod(getSubstring(spltA, 2), NULL);
+    double h = strtod(getSubstring(spltA, 3), NULL);
 
     // Definir se a reta pertence à area
     if(x0 < x || x0 > x+w) return false;

@@ -247,7 +247,14 @@ Splited split(char *string, char *separator) {
     _Splited *splt = new_Splited();
 
     splt->num_substrings = number_of_substrings(string, separator);
-    splt->substrings = substrings_matrix(string, separator, splt->num_substrings);
+    if(splt->num_substrings == 1) {
+        splt->substrings = (char **) malloc(sizeof(char *));
+        splt->substrings[0] = (char *) malloc((strlen(string) + 1) * sizeof(char));
+        int j;
+        for(j = 0; j < strlen(string); j++) splt->substrings[0][j] = string[j];
+        splt->substrings[0][j] = '\0';
+    }
+    else splt->substrings = substrings_matrix(string, separator, splt->num_substrings);
 
     return splt;
 }
