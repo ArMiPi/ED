@@ -2,6 +2,7 @@
 #include<stdlib.h>
 
 #include"point.h"
+#include"split.h"
 
 typedef struct _point {
     double x;
@@ -56,4 +57,25 @@ int comparePoints(point p1, point p2) {
     else if(P1->x == P2->x && P1->y < P2->y) return -1;
     else if(P1->x == P2->x && P1->y == P2->y) return 0;
     return 1;
+}
+
+bool isPointInArea(point P, string area) {
+    if(P == NULL || area == NULL) return false;
+    
+    Splited splt = split(area, " ");
+    double x = strtod(getSubstring(splt, 0), NULL);
+    double y = strtod(getSubstring(splt, 1), NULL);
+    double w = strtod(getSubstring(splt, 2), NULL);
+    double h = strtod(getSubstring(splt, 3), NULL);
+
+    POINT *p = (POINT *) P;
+
+    bool response = true;
+
+    if(p->x < x || p->x > x+w) response = false;
+    if(p->y < y || p->y > y+h) response = false;
+
+    destroySplited(splt);
+
+    return response;
 }

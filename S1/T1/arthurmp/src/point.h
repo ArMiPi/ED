@@ -1,6 +1,9 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include<stdbool.h>
+#include"strings.h"
+
 /*
     - Esse módulo tem por objetivo definir um ponto cartesiano
 
@@ -82,5 +85,22 @@ void updatePoint(point p, double x, double y);
           realizada com base na coordenada y
 */
 int comparePoints(point p1, point p2);
+
+/*
+    # Entradas:
+        - P: Ponto
+        - area: String delimitando a área
+    
+    # Saída:
+        - true/false
+    
+    # Descrição:
+        - Retorna true se P pertencer à área, false caso contrário
+
+        - area deve ser "x y w h"
+
+        - area != NULL
+*/
+bool isPointInArea(point P, string area);
 
 #endif
