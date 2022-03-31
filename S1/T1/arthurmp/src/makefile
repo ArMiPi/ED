@@ -91,6 +91,69 @@ geo: ${EXECUTAVEL}
 
 qry:
 	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f escada-20.geo -o ../../testes/BSD/ -q /escada-20/001.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f escada-20.geo -o ../../testes/BSD/ -q /escada-20/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/002-dps-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/002-dps-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/003-ups-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/003-ups-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/007.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/008.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/001-dels-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/001-dels-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/002-dps-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/002-dps-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/003-ups-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/003-ups-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/007.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-2.geo -o ../../testes/BSD/ -q /hinosp-2/008.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-palestra.geo -o ../../testes/BSD/ -q /jog-palestra/plc-01.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-palestra.geo -o ../../testes/BSD/ -q /jog-palestra/plc-02.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/001-dels-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/001-dels-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/002-dps-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/002-dps-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/003-ups-tudo.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/003-ups-vazio.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/007.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/008.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/001-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/002-dps.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/003-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/004-dels14.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/005-dels.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/006-ups.qry
 
 teste:
-	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/002-dps.qry
+	

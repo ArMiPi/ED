@@ -210,6 +210,17 @@ item GetPreviousItem(item li) {
     return lli->prev;
 }
 
+element ReplaceItem(item li, element elem) {
+    if(li == NULL || elem == NULL) return NULL;
+
+    LLITEM *lli = (LLITEM *) li;
+
+    element toReturn = lli->elem;
+    lli->elem = elem;
+
+    return toReturn;
+}
+
 void DestroyList(llist lst, void (*destroyElement)()) {
     if(lst == NULL) return;
 

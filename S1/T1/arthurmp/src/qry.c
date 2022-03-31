@@ -59,10 +59,9 @@ void reportTXT(FILE *txt, string command, string toReport) {
     if(txt == NULL) return;
 
     if(command == NULL) command = "NULL";
-    if(toReport == NULL) toReport = "Nada a reportar\n\n";
 
     fprintf(txt, "[*] %s\n", command);
-    fprintf(txt, "%s\n\n", toReport);
+    if(toReport != NULL) fprintf(txt, "%s\n\n", toReport);
 }
 
 /*
@@ -289,13 +288,14 @@ void clp(queue polygon) {
 
         - Desconsidera seleções anteriores, ou seja, "esvazia" selected
 */
-void sel(llist selected) {
-    if(selected == NULL) return;
+llist sel(llist selected) {
+    if(selected == NULL) return NewList();
     
     // Desconsiderar seleções anteriores
     while(!IsListEmpty(selected)) RemoveItem(selected, GetFirstItem(selected));
     DestroyList(selected, NULL);
-    selected = NewList();
+    
+    return NewList();
 }
 
 /*
@@ -400,7 +400,7 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
 void dels(FILE *txt, llist selected, llist db) {
     if(txt == NULL || selected == NULL || db == NULL) return;
 
-    fprintf(txt, "[*] del\n");
+    fprintf(txt, "[*] dels\n");
 
     item li;
     string forma, toReport;
@@ -435,6 +435,7 @@ void dels(FILE *txt, llist selected, llist db) {
 */
 void dps(string i, string dx, string dy, string corb, string corp, llist db, llist selected) {
     if(db == NULL || selected == NULL) return;
+    if(IsListEmpty(selected)) return;
 
     int ID = atoi(i);
     double DX = strtod(dx, NULL);
@@ -501,15 +502,167 @@ void dps(string i, string dx, string dy, string corb, string corp, llist db, lli
         - Transladar as mesmas formas em dx e dy
 
 */
-void ups(string corb, string corp, string dx, string dy, llist selected) {
-    
+void ups(string corb, string corp, string dx, string dy, string n, llist selected, llist db) {
+    if(selected == NULL || db == NULL) return;
+    if(IsListEmpty(selected)) return;
+    if(ListSize(selected) == 1) return;
+
+    int N = atoi(n);
+    double DX = strtod(dx, NULL);
+    double DY = strtod(dy, NULL);
+    item pivot = GetItemElement(GetLastItem(selected)); // Última forma selecionada por sel
+
+    string forma, toAdd, toRemove;
+    Splited splt;
+    if(N > 0) {
+        for(int i = 1; i <= N; i++) {
+            pivot = GetNextItem(pivot);
+            if(pivot == NULL) return;
+            forma = GetItemElement(pivot);
+            splt = split(forma, " ");
+
+            if(strcmp(getFormType(forma), "circulo") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string r = getSubstring(splt, 4);
+
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "c %s %lf %lf %s %s %s", id, x, y, r, corb, corp);
+            }
+            else if(strcmp(getFormType(forma), "retangulo") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string w = getSubstring(splt, 4);
+                string h = getSubstring(splt, 5);
+
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "r %s %lf %lf %s %s %s %s", id, x, y, w, h, corb, corp);
+            }
+            else if(strcmp(getFormType(forma), "reta") == 0) {
+                string id = getSubstring(splt, 1);
+                double x0 = strtod(getSubstring(splt, 2), NULL);
+                double y0 = strtod(getSubstring(splt, 3), NULL);
+                double x1 = strtod(getSubstring(splt, 4), NULL);
+                double y1 = strtod(getSubstring(splt, 5), NULL);
+
+                x0 += DX;
+                x1 += DX;
+                y0 += DY;
+                y1 += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "l %s %lf %lf %lf %lf %s", id, x0, y0, x1, y1, corb);
+            }
+            else if(strcmp(getFormType(forma), "texto") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string a = getSubstring(splt, 6);
+                string *content = getAllSubstrings(splt);
+                content += 7;
+                string txto = join((getNumSubstrings(splt) - 7), content, " ");
+            
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "t %s %lf %lf %s %s %s %s", id, x, y, corb, corp, a, txto);
+
+                free(txto);
+            }
+
+            toRemove = ReplaceItem(pivot, toAdd);
+
+            free(toRemove);
+            destroySplited(splt);
+            DY++;
+        }
+    }
+    else {
+        for(int i = -1; i >= N; i--) {
+            pivot = GetPreviousItem(pivot);
+            if(pivot == NULL) return;
+            forma = GetItemElement(pivot);
+            splt = split(forma, " ");
+
+            if(strcmp(getFormType(forma), "circulo") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string r = getSubstring(splt, 4);
+
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "c %s %lf %lf %s %s %s", id, x, y, r, corb, corp);
+            }
+            else if(strcmp(getFormType(forma), "retangulo") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string w = getSubstring(splt, 4);
+                string h = getSubstring(splt, 5);
+
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "r %s %lf %lf %s %s %s %s", id, x, y, w, h, corb, corp);
+            }
+            else if(strcmp(getFormType(forma), "reta") == 0) {
+                string id = getSubstring(splt, 1);
+                double x0 = strtod(getSubstring(splt, 2), NULL);
+                double y0 = strtod(getSubstring(splt, 3), NULL);
+                double x1 = strtod(getSubstring(splt, 4), NULL);
+                double y1 = strtod(getSubstring(splt, 5), NULL);
+
+                x0 += DX;
+                x1 += DX;
+                y0 += DY;
+                y1 += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "l %s %lf %lf %lf %lf %s", id, x0, y0, x1, y1, corb);
+            }
+            else if(strcmp(getFormType(forma), "texto") == 0) {
+                string id = getSubstring(splt, 1);
+                double x = strtod(getSubstring(splt, 2), NULL);
+                double y = strtod(getSubstring(splt, 3), NULL);
+                string a = getSubstring(splt, 6);
+                string *content = getAllSubstrings(splt);
+                content += 7;
+                string txto = join((getNumSubstrings(splt) - 7), content, " ");
+            
+                x += DX;
+                y += DY;
+
+                toAdd = newEmptyString(MAX_SIZE);
+                sprintf(toAdd, "t %s %lf %lf %s %s %s %s", id, x, y, corb, corp, a, txto);
+
+                free(txto);
+            }
+
+            toRemove = ReplaceItem(pivot, toAdd);
+
+            free(toRemove);
+            destroySplited(splt);
+            DY++;
+        }
+    }
 }
 
 void executeQry(string BSD, string geoName, string qryName, llist commands, llist database) {
     if(BSD == NULL || geoName == NULL || qryName == NULL || commands == NULL || database == NULL) return;
     
-    // txt de saída utilizado por algumas qrys
-    FILE *txt = NULL;
 
     // String a ser inserida no .txt
     string toReport;
@@ -539,13 +692,15 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
     string resultName = join(2, names, "-");
 
     destroySplited(name);
+    
+    // txt de saída utilizado por algumas qrys
+    FILE *txt = createTXT(BSD, resultName);
 
     Splited splt;
     for(item i = GetFirstItem(commands); i != NULL; i = GetNextItem(i)) {
         splt = split((string)GetItemElement(i), " ");
 
         if(strcmp(getSubstring(splt, 0), "inp") == 0) {
-            if(txt == NULL) createTXT(BSD, resultName);
             if(polygon == NULL) newQueue();
 
             toReport = inp(getSubstring(splt, 1), polygon, database);
@@ -558,26 +713,36 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
         else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);*/
         else if(strcmp(getSubstring(splt, 0), "sel") == 0) {
-            if(txt == NULL) txt = createTXT(BSD, resultName);
             if(selected == NULL) selected = NewList();
-            sel(selected);
+            selected = sel(selected);
             selplus(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
-            
+
             reportSel(txt, GetFirstItem(selected), -1, -1, GetItemElement(i));
             selSize = ListSize(selected);
         }
-        else if(strcmp(getSubstring(splt, 0), "selplus") == 0) {
+        else if(strcmp(getSubstring(splt, 0), "sel+") == 0) {
+            if(selected == NULL) selected = sel(selected);
             item first = GetLastItem(selected);
 
             selplus(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
             
+            if(first == NULL) first = GetFirstItem(selected);
+            else first = GetNextItem(first);
             reportSel(txt, first, selSize, ListSize(selected) - selSize, GetItemElement(i));
             selSize = ListSize(selected);
         }
-        else if(strcmp(getSubstring(splt, 0), "dels") == 0) dels(txt, selected, database);
-        else if(strcmp(getSubstring(splt, 0), "dps") == 0) dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
-        //else if(strcmp(getSubstring(splt, 0), "ups") == 0) ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), selected);
-        //else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
+        else if(strcmp(getSubstring(splt, 0), "dels") == 0) {
+            dels(txt, selected, database);
+        }
+        else if(strcmp(getSubstring(splt, 0), "dps") == 0) {
+            dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);
+            reportTXT(txt, GetItemElement(i), NULL);
+        }
+        else if(strcmp(getSubstring(splt, 0), "ups") == 0) {
+            ups(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), selected, database);
+            reportTXT(txt, GetItemElement(i), NULL);
+        }
+        else printf("WARNING: %s is not a valid command\n", getSubstring(splt, 0));
 
         destroySplited(splt);
     }

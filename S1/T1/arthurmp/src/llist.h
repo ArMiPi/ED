@@ -205,6 +205,20 @@ item GetPreviousItem(item li);
 
 /*
     # Entradas:
+        - li: Item da lista
+        - elem: Elemento
+
+    # Saída:
+        - elem: Elemento
+    
+    # Descrição:
+        - Substitui o elemento armazenado em li por elem e retorna
+          o elemento que foi substituído
+*/
+element ReplaceItem(item li, element elem);
+
+/*
+    # Entradas:
         - lst: Lista
         - destroyElement: Função
     
