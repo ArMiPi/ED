@@ -85,6 +85,10 @@ void reportSel(FILE *txt, item selectedItem, int selSize, int selPlusSize, strin
 
     if(selectedItem == NULL || command == NULL) {
         reportTXT(txt, command, NULL);
+        if(selSize != -1 && selPlusSize != -1) {
+            fprintf(txt, "Quantidade de itens antes da selecao: %d\n", selSize);
+            fprintf(txt, "Quantidade de itens inseridos: %d\n", selPlusSize);
+        }
         return;
     }
 
@@ -102,6 +106,10 @@ void reportSel(FILE *txt, item selectedItem, int selSize, int selPlusSize, strin
         fprintf(txt, "%s %s\n", getSubstring(splt, 1), getFormType(comandoForma));
     
         destroySplited(splt);
+    }
+    if(selSize != -1 && selPlusSize != -1) {
+        fprintf(txt, "Quantidade de itens antes da selecao: %d\n", selSize);
+        fprintf(txt, "Quantidade de itens inseridos: %d\n", selPlusSize);
     }
     fprintf(txt, "\n");
 }
@@ -706,12 +714,18 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
             toReport = inp(getSubstring(splt, 1), polygon, database);
             reportTXT(txt, GetItemElement(i), toReport);
         }
-        /*else if(strcmp(getSubstring(splt, 0), "rmp") == 0) {
+        else if(strcmp(getSubstring(splt, 0), "rmp") == 0) {
             toReport = rmp(polygon);
             reportTXT(txt, GetItemElement(i), toReport);
         }
-        else if(strcmp(getSubstring(splt, 0), "pol") == 0) pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
-        else if(strcmp(getSubstring(splt, 0), "clp") == 0) clp(polygon);*/
+        else if(strcmp(getSubstring(splt, 0), "pol") == 0) {
+            pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
+            reportTXT(txt, GetItemElement(i), NULL);
+        }
+        else if(strcmp(getSubstring(splt, 0), "clp") == 0) {
+            clp(polygon);
+            reportTXT(txt, GetItemElement(i), NULL);
+        }
         else if(strcmp(getSubstring(splt, 0), "sel") == 0) {
             if(selected == NULL) selected = NewList();
             selected = sel(selected);
@@ -733,6 +747,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
         }
         else if(strcmp(getSubstring(splt, 0), "dels") == 0) {
             dels(txt, selected, database);
+            selSize = 0;
         }
         else if(strcmp(getSubstring(splt, 0), "dps") == 0) {
             dps(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), database, selected);

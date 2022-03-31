@@ -156,4 +156,5 @@ qry:
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/006-ups.qry
 
 teste:
-	
+	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/002.qry
