@@ -221,47 +221,62 @@ string rmp(queue polygon) {
 
         - As linhas de preenchimento são separadas por uma distância vertical de d
 */
-void pol(string i, string d, string e, string corb, string corp, queue polygon, llist db) {
+queue pol(string i, string d, string e, string corb, string corp, queue polygon, llist db) {
+    if(polygon == NULL || db == NULL) return polygon;
+    if(isQueueEmpty(polygon)) return polygon;
+
     // Valores utilizados para a criação das linhas no svg
     int id = atoi(i);
-    string cor = corb;
+    //int distancia = atoi(d);
+
+    // Fila auxiliar para manter os pontos após a criação do polígono
+    queue aux = newQueue();
 
     // Lista contendo as retas que formam o polígono
     llist polLines = NewList();
     
-    // Inserir as retas que formam o polígono em db
     string temp = newEmptyString(MAX_SIZE);
-    string current = (string) dequeue(polygon);
-    string first = copyString(current);
+    string current = (string) dequeue(polygon); 
     string next, toInsert;
+
+    // Inserir primeiro elemento removido de polygon em aux
+    enqueue(aux, current);
     
-    // Laço para as retas que formam o polígono
+    // Laço para as retas que formam a borda do polígono
     while(!isQueueEmpty(polygon)) {
-        // Ponto final da reta
         next = (string) dequeue(polygon);
-        if(next == NULL) next = first;
 
         // Criar comando das retas que formam o polígono
-        sprintf(temp, "lp %d %s %s %s %s", id, current, next, cor, e);
+        sprintf(temp, "lp %d %s %s %s %s", id, current, next, corb, e);
         toInsert = copyString(temp);
         InsertEnd(db, toInsert);
 
-        // Criar e armazenar equação da reta
+        // Criar e armazenar os pontos para posterior criação das linhas de preenchimento
         sprintf(temp, "%s %s", current, next);
         toInsert = copyString(temp);
         InsertEnd(polLines, toInsert);
 
+        // Inserir ponto que foi removido de polygon em aux
+        enqueue(aux, next);
+
         // Informações para próxima interação
         id++;
-        free(current);
         current = next;
     }
-    free(first);
-    free(temp);
+    // Inserir primeiro ponto de polygon novamente para "fechar" o polígono
+    sprintf(temp, "lp %d %s %s %s %s", id, current, (string) peekQueue(aux), corb, e);
+    toInsert = copyString(temp);
+    InsertEnd(db, toInsert);
+
+    // Fazer polygon apontar para a cópia criada
     destroyQueue(polygon, NULL);
 
-    // Laço para as retas internas ao polígono
+    free(temp);
 
+    // Criar as retas internas do polígono
+
+
+    return aux;
 }
 
 /*
@@ -709,7 +724,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
         splt = split((string)GetItemElement(i), " ");
 
         if(strcmp(getSubstring(splt, 0), "inp") == 0) {
-            if(polygon == NULL) newQueue();
+            if(polygon == NULL) polygon = newQueue();
 
             toReport = inp(getSubstring(splt, 1), polygon, database);
             reportTXT(txt, GetItemElement(i), toReport);
@@ -719,7 +734,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
             reportTXT(txt, GetItemElement(i), toReport);
         }
         else if(strcmp(getSubstring(splt, 0), "pol") == 0) {
-            pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
+            polygon = pol(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), getSubstring(splt, 5), polygon, database);
             reportTXT(txt, GetItemElement(i), NULL);
         }
         else if(strcmp(getSubstring(splt, 0), "clp") == 0) {
@@ -728,6 +743,7 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
         }
         else if(strcmp(getSubstring(splt, 0), "sel") == 0) {
             if(selected == NULL) selected = NewList();
+
             selected = sel(selected);
             selplus(getSubstring(splt, 1), getSubstring(splt, 2), getSubstring(splt, 3), getSubstring(splt, 4), database, selected);
 
@@ -768,4 +784,6 @@ void executeQry(string BSD, string geoName, string qryName, llist commands, llis
 
     // Criar o svg resultante das qrys
     generateSVG(BSD, resultName, database);
+
+    free(resultName);
 }

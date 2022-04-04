@@ -6,33 +6,6 @@
 
 #define MAX_SIZE 100
 
-string lineEquation(string points) {
-    if(points == NULL) return NULL;
-
-    // Coeficiente linear da reta
-    double m = lineM(points);
-
-    // Cálculo dos valores de a e b
-    Splited splt = split(points, " ");
-
-    double x0 = strtod(getSubstring(splt, 0), NULL);
-    double y0 = strtod(getSubstring(splt, 1), NULL);
-
-    double a = 1 / m;
-    double b = (-x0 / m) + y0;
-
-    // Criar string com a equação da reta
-    string temp = newEmptyString(MAX_SIZE);
-    sprintf(temp, "y = %lf x + %lf", a, b);
-
-    string equation = copyString(temp);
-
-    free(temp);
-    destroySplited(splt);
-
-    return equation;
-}
-
 double lineM(string points) {
     if(points == NULL) return 0.0;
 
