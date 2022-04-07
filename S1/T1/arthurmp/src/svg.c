@@ -65,7 +65,7 @@ void drawCircle(FILE *fptr, Splited splt) {
     string corp = getSubstring(splt, 6);
 
     fprintf(fptr, "<circle style=\"fill:%s; fill-opacity:%s; ", corp, FILL_OPACITY);
-    fprintf(fptr, "stroke=%s;\" ", corb);
+    fprintf(fptr, "stroke=%s; stroke-width=%s;\" ", corb, STROKE_WIDTH);
     fprintf(fptr, "r=\"%s\" ", r);
     fprintf(fptr, "cy=\"%s\" ", y);
     fprintf(fptr, "cx=\"%s\" />\n", x);

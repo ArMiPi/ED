@@ -438,6 +438,7 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
 
     string area = join(4, temp, " ");
     string points = newEmptyString(MAX_SIZE);
+    string ring;
     string command;
     Splited splt;
     // Procurar pelas formas contidas em area
@@ -454,7 +455,14 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
             if(!isLineInArea(points, area)) continue;
 
             sprintf(points, "%lf %lf %lf %lf", x, y-r, x, y+r);
-            if(isLineInArea(points, area)) InsertEnd(selected, li);
+            if(!isLineInArea(points, area)) continue;
+            
+            InsertEnd(selected, li);
+
+            // Criar anel ao redor do ponto de ancoragem
+            ring = newEmptyString(MAX_SIZE);
+            sprintf(ring, "c 0 %lf %lf 1.000 red red", x, y);
+            InsertBefore(db, li, ring);
         }
         else if(strcmp(getFormType(command), "retangulo") == 0) {
             double x = strtod(getSubstring(splt, 2), NULL);
@@ -463,7 +471,14 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
             double h = strtod(getSubstring(splt, 5), NULL);
 
             sprintf(points, "%lf %lf %lf %lf", x, y, x+w, y+h);
-            if(isLineInArea(points, area)) InsertEnd(selected, li);
+            if(!isLineInArea(points, area)) continue;
+            
+            InsertEnd(selected, li);
+
+            // Criar anel ao redor do ponto de ancoragem
+            ring = newEmptyString(MAX_SIZE);
+            sprintf(ring, "c 0 %lf %lf 1.000 red red", x, y);
+            InsertBefore(db, li, ring);
         }
         else if(strcmp(getFormType(command), "reta") == 0) {
             double x0 = strtod(getSubstring(splt, 2), NULL);
@@ -472,7 +487,14 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
             double y1 = strtod(getSubstring(splt, 5), NULL);
 
             sprintf(points, "%lf %lf %lf %lf", x0, y0, x1, y1);
-            if(isLineInArea(points, area)) InsertEnd(selected, li);
+            if(!isLineInArea(points, area)) continue;
+            
+            InsertEnd(selected, li);
+
+            // Criar anel ao redor do ponto de ancoragem
+            ring = newEmptyString(MAX_SIZE);
+            sprintf(ring, "c 0 %lf %lf 1.000 red red", x0, y0);
+            InsertBefore(db, li, ring);
         }
         else if(strcmp(getFormType(command), "texto") == 0) {
             double x = strtod(getSubstring(splt, 2), NULL);
@@ -480,7 +502,14 @@ void selplus(string x, string y, string w, string h, llist db, llist selected) {
 
             point P = newPoint(x, y);
 
-            if(isPointInArea(P, area)) InsertEnd(selected, li);
+            if(isPointInArea(P, area)) continue;
+            
+            InsertEnd(selected, li);
+
+            // Criar anel ao redor do ponto de ancoragem
+            ring = newEmptyString(MAX_SIZE);
+            sprintf(ring, "c 0 %lf %lf 1.000 red red", x, y);
+            InsertBefore(db, li, ring);
         }
 
         destroySplited(splt);
