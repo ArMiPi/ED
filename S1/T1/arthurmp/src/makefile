@@ -96,8 +96,34 @@ qry:
 	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/004-dels14.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/005-dels.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f casa-campo.geo -o ../../testes/BSD/ -q /casa-campo/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/002.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f escada-20.geo -o ../../testes/BSD/ -q /escada-20/001.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f escada-20.geo -o ../../testes/BSD/ -q /escada-20/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-2v-cc-azlj/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-2v-cc-azlj/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-ln-az.geo -o ../../testes/BSD/ -q /espiral-2v-ln-az/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-ln-az.geo -o ../../testes/BSD/ -q /espiral-2v-ln-az/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-2v-rt-azbr/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-2v-rt-azbr/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-2v-tt-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-2v-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-2v-tt-hsp/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-incompl-cc-azlj/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-incompl-cc-azlj/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-cc-azlj/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-cc-azlj.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-cc-azlj/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-ln-az.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-ln-az/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-ln-az.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-ln-az/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-rt-azbr/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-rt-azbr/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-tt-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-dupl-trans-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-incompl-dupl-trans-tt-hsp/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-ln-az.geo -o ../../testes/BSD/ -q /espiral-incompl-ln-az/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-ln-az.geo -o ../../testes/BSD/ -q /espiral-incompl-ln-az/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-incompl-rt-azbr/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-rt-azbr.geo -o ../../testes/BSD/ -q /espiral-incompl-rt-azbr/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-incompl-tt-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f espiral-incompl-tt-hsp.geo -o ../../testes/BSD/ -q /espiral-incompl-tt-hsp/002.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels-tudo.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f hinosp-1.geo -o ../../testes/BSD/ -q /hinosp-1/001-dels-vazio.qry
@@ -142,6 +168,12 @@ qry:
 	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/006-ups.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/007.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f jog-spfc.geo -o ../../testes/BSD/ -q /jog-spfc/008.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f p33-ttpr-hsp.geo -o ../../testes/BSD/ -q /p33-ttpr-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f p33-ttpr-hsp.geo -o ../../testes/BSD/ -q /p33-ttpr-hsp/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f quadrado-ttpr-hsp.geo -o ../../testes/BSD/ -q /quadrado-ttpr-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f quadrado-ttpr-hsp.geo -o ../../testes/BSD/ -q /quadrado-ttpr-hsp/002.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f serrac-ttse-hsp.geo -o ../../testes/BSD/ -q /serrac-ttse-hsp/001-simples.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f serrac-ttse-hsp.geo -o ../../testes/BSD/ -q /serrac-ttse-hsp/002.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/001-dels.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/002-dps.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vaso-flor.geo -o ../../testes/BSD/ -q /vaso-flor/003-ups.qry
@@ -154,7 +186,7 @@ qry:
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/004-dels14.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/005-dels.qry
 	./${EXECUTAVEL} -e ../../testes/BED/ -f vasos-flores.geo -o ../../testes/BSD/ -q /vasos-flores/006-ups.qry
+	./${EXECUTAVEL} -e ../../testes/BED/ -f triangulo-ttpr-hsp.geo -o ../../testes/BSD/ -q /triangulo-ttpr-hsp/001-simples.qry
 
 teste:
-	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/001-simples.qry
-	./${EXECUTAVEL} -e ../../testes/BED/ -f engr-ttse-hsp.geo -o ../../testes/BSD/ -q /engr-ttse-hsp/002.qry
+	./${EXECUTAVEL}

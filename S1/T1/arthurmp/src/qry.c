@@ -203,6 +203,73 @@ string rmp(queue polygon) {
 
 /*
     # Entradas:
+        - id: Id inicial para a criação das retas
+        - distance: Distância entre as retas
+        - e: Espessura das linhas
+        - color: Cor das linhas
+        - lines: Lista contendo as coordenadas de cada linha
+        - db: Lista onde as linhas serão inseridas
+        - maxY: Maior valor de y do polígono
+        - minY: Menor valor de y do polígono
+    
+    # Descrição:
+        - Cria as linhas internas do polígono criado em pol
+
+        - Todas as entradas devem ser != NULL
+*/
+void createInternalLines(int id, double distance, string e, string color, llist lines, llist db, double maxY, double minY) {
+    if(lines == NULL || db == NULL) return;
+
+    Splited coordinates;
+    double x0, y0, x1, y1, x;
+    double linePoints[2];
+    int controller;
+    string temp = newEmptyString(MAX_SIZE);
+    string toInsert;
+
+    // Criar retas a partir de minY até maxY espaçadas em distance
+    for(double y = minY; y < maxY; y += distance) {
+        controller = 0;
+        // Verificar quais linhas de lines contém a coordenada y
+        for(item li = GetFirstItem(lines); li != NULL; li = GetNextItem(li)) {
+            coordinates = split((string) GetItemElement(li), " ");
+            
+            x0 = strtod(getSubstring(coordinates, 0), NULL);
+            y0 = strtod(getSubstring(coordinates, 1), NULL);
+            x1 = strtod(getSubstring(coordinates, 2), NULL);
+            y1 = strtod(getSubstring(coordinates, 3), NULL);
+
+            destroySplited(coordinates);
+
+            // Verificar se y está presente nessa reta
+            if(y0 > y1 && y > y0) continue;
+            if(y0 > y1 && y < y1) continue;
+            if(y1 > y0 && y > y1) continue;
+            if(y1 > y0 && y < y0) continue;
+
+            // Calcular valor da coordenada x do ponto (x, y) pertencente à reta
+            x = lineX(x0, y0, x1, y1, y);
+
+            linePoints[controller] = x;
+            controller++;
+
+            if(controller == 2) {
+                if(linePoints[0] != linePoints[1]) {
+                    sprintf(temp, "lp %d %lf %lf %lf %lf %s %s", id, linePoints[0], y, linePoints[1], y, color, e);
+                    toInsert = copyString(temp);
+                    InsertEnd(db, toInsert);
+                }
+
+                id++;
+                controller = 0;
+            }  
+        }
+    }
+
+}
+
+/*
+    # Entradas:
         - i: Id inicial das linhas
         - d: Distância entre as linhas de preenchimento
         - e: Espessura das linhas
@@ -227,17 +294,26 @@ queue pol(string i, string d, string e, string corb, string corp, queue polygon,
 
     // Valores utilizados para a criação das linhas no svg
     int id = atoi(i);
-    //int distancia = atoi(d);
 
     // Fila auxiliar para manter os pontos após a criação do polígono
     queue aux = newQueue();
 
     // Lista contendo as retas que formam o polígono
     llist polLines = NewList();
+
+    // Maiores / Menores coordenadas do polígono
+    double maiorY, menorY, tempCoordinate;
     
     string temp = newEmptyString(MAX_SIZE);
     string current = (string) dequeue(polygon); 
     string next, toInsert;
+
+    Splited spltP;
+    spltP = split(current, " ");
+    maiorY = strtod(getSubstring(spltP, 1), NULL);
+    menorY = strtod(getSubstring(spltP, 1), NULL);
+
+    destroySplited(spltP);
 
     // Inserir primeiro elemento removido de polygon em aux
     enqueue(aux, current);
@@ -245,6 +321,15 @@ queue pol(string i, string d, string e, string corb, string corp, queue polygon,
     // Laço para as retas que formam a borda do polígono
     while(!isQueueEmpty(polygon)) {
         next = (string) dequeue(polygon);
+
+        // Analisar coordenada
+        spltP = split(next, " ");
+
+        tempCoordinate = strtod(getSubstring(spltP, 1), NULL);
+        if(tempCoordinate < menorY) menorY = tempCoordinate;
+        if(tempCoordinate > maiorY) maiorY = tempCoordinate;
+
+        destroySplited(spltP);
 
         // Criar comando das retas que formam o polígono
         sprintf(temp, "lp %d %s %s %s %s", id, current, next, corb, e);
@@ -267,15 +352,19 @@ queue pol(string i, string d, string e, string corb, string corp, queue polygon,
     sprintf(temp, "lp %d %s %s %s %s", id, current, (string) peekQueue(aux), corb, e);
     toInsert = copyString(temp);
     InsertEnd(db, toInsert);
-
-    // Fazer polygon apontar para a cópia criada
-    destroyQueue(polygon, NULL);
+    // Inserir última linha
+    sprintf(temp, "%s %s", current, (string) peekQueue(aux));
+    toInsert = copyString(temp);
+    InsertEnd(polLines, toInsert);
 
     free(temp);
 
     // Criar as retas internas do polígono
+    int distancia = atoi(d);
+    createInternalLines(id, distancia, e, corp, polLines, db, maiorY, menorY);
 
-
+    DestroyList(polLines, NULL);
+    destroyQueue(polygon, NULL);
     return aux;
 }
 

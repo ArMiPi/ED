@@ -6,47 +6,46 @@
 
 #define MAX_SIZE 100
 
-double lineM(string points) {
-    if(points == NULL) return 0.0;
+double lineM(double x0, double y0, double x1, double y1) {
+    double dx = x1 - x0;
+    double dy = y1 - y0;
 
-    Splited splt = split(points, " ");
+    if(dx == 0) return 0.0;
 
-    double x0 = strtod(getSubstring(splt, 0), NULL);
-    double y0 = strtod(getSubstring(splt, 1), NULL);
-    double x = strtod(getSubstring(splt, 2), NULL);
-    double y = strtod(getSubstring(splt, 3), NULL);
-
-    return (x - x0) / (y - y0);
+    return dy/dx;
 }
 
-double lineX(string lineEquation, double y) {
-    if(lineEquation == NULL) return 0.0;
+double lineX(double x0, double y0, double x1, double y1, double y) {
+    double m = lineM(x0, y0, x1, y1);
 
-    Splited splt = split(lineEquation, " ");
+    double x = y - y0;
+    x /= m;
+    x += x0;
 
-    double a = strtod(getSubstring(splt, 2), NULL);
-    double b = strtod(getSubstring(splt, 5), NULL);
+    if(m == 0) x = x0;
 
-    return (y - b) / a;
+    return x;
 }
 
 bool isLineInArea(string points, string area) {
     if(points == NULL || area == NULL) return false;
 
     Splited spltP = split(points, " ");
-    Splited spltA = split(area, " ");
-
     // Valores da reta
     double x0 = strtod(getSubstring(spltP, 0), NULL);
     double y0 = strtod(getSubstring(spltP, 1), NULL);
     double x1 = strtod(getSubstring(spltP, 2), NULL);
     double y1 = strtod(getSubstring(spltP, 3), NULL);
 
+    Splited spltA = split(area, " ");
     // Valores da área
     double x = strtod(getSubstring(spltA, 0), NULL);
     double y = strtod(getSubstring(spltA, 1), NULL);
     double w = strtod(getSubstring(spltA, 2), NULL);
     double h = strtod(getSubstring(spltA, 3), NULL);
+
+    destroySplited(spltP);
+    destroySplited(spltA);
 
     // Definir se a reta pertence à area
     if(x0 < x || x0 > x+w) return false;

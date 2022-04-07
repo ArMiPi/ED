@@ -13,51 +13,30 @@
 
 /*
     # Entrada:
-        - points: string contendo dois pontos pertencentes à reta
+        - x0, y0, x1, y1: Coordenadas de pontos P0 e P1 pertencentes a uma reta
     
     # Saída:
-        - string: y = a x + b
-    
-    # Descrição:
-        - Retorna a equação da reta obtida a partir de:
-            x - x0 = m(y - y0)
-        
-        - points deve conter as coordenadas x1 y1 x2 y2 respectivamente
-
-        - Para a equação x0 = x1 e y0 = y1
-*/
-string lineEquation(string points);
-
-/*
-    # Entrada:
-        - points: string contendo dois pontos pertencentes à reta
-    
-    # Saída:
-        - string: Equação da reta
+        - double
     
     # Descrição:
         - Retorna o coeficiente angular da reta:
-            m = (x - x0) / (y - y0)
-        
-        - points deve conter as coordenadas x1 y1 x2 y2 respectivamente
-
-        - Para a equação x0 = x1, y0 = y1, x = x2 e y = y2
+            m = (y1 - y0) / (x1 - x0)
 */
-double lineM(string points);
+double lineM(double x0, double y0, double x1, double y1);
 
 /*
     # Entradas:
-        - lineEq: string contendo a equação de uma reta
-        - y: Coordenada y
+        - x0, y0, x1, y1: Coordenadas de pontos P0 e P1 pertencentes a uma reta
+        - y: Coordenada y delimitada por y0 e y1
     
     # Saídas:
-        - double x
+        - double
     
     # Descrição:
         - Retorna o valor da coordenada x do ponto (x, y)
-          pretencente à reta lineEq
+          pretencente à reta que contém os pontos (x0, y0) e (x1, y1)
 */
-double lineX(string lineEq, double y);
+double lineX(double x0, double y0, double x1, double y1, double y);
 
 /*
     # Entradas:
